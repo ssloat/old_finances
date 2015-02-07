@@ -102,6 +102,7 @@ def create_categories(session):
     session.add( CategoryRE("Rent", inc, r"Counter Credit") )
     session.add( CategoryRE("Bofa chk Interest", inc, r"Interest Earned") )
     session.add( CategoryRE("Credit Card cash reward", inc, r"FIA CARD SVCS DES:CASHREWARD") )
+    session.add( CategoryRE("Credit Card cash reward", inc, r"Bank of America DES:CASHREWARD") )
     session.add( CategoryRE("Tax Rebate", inc, r"TAX REBATE", True) )
     session.add( CategoryRE("Tax Rebate", inc, r"TAX PRODUCTS PE2", True) )
     session.add( CategoryRE("Tax Rebate", inc, r"US TREASURY", True) )
@@ -133,6 +134,7 @@ def create_categories(session):
     session.add( CategoryRE("Chimney Ext", hrep, r"PAYPAL +FIREPLACE") )
     session.add( CategoryRE("Furniture", hrep, r"JUBILEE FURNITURE") )
     session.add( CategoryRE("Roto Rooter", hrep, r"ROTO-ROOTER") )
+    session.add( CategoryRE("Shower head", hrep, r"GUILLENS PLUMBING") )
     session.add( CategoryRE("Angie's List", hrep, r"ANGIES LIST") )
 
     session.add( CategoryRE("John Stott", give, r"JOHN STOTT MIN") )
@@ -156,6 +158,7 @@ def create_categories(session):
     session.add( CategoryRE("Binnys", fin, 'Binny\'s') )
     session.add( CategoryRE("Malloys", fin, 'MALLOYS') )
     session.add( CategoryRE("King Soopers", fin, 'KING SOOPERS') )
+    session.add( CategoryRE("Giant", fin, 'GIANT 0756') )
 
     session.add( CategoryRE("Potbelly", fosolo, 'POTBELLY') )
     session.add( CategoryRE("Potbelly", fosolo, 'Potbelly') )
@@ -252,6 +255,7 @@ def create_categories(session):
 
     session.add( CategoryRE("Comcast", dbills, 'COMCAST CHICAGO') )
     session.add( CategoryRE("At&t", dbills, 'AT&T BILL') )
+    session.add( CategoryRE("At&t", dbills, 'ATT BILL PAYMENT') )
     session.add( CategoryRE("DirecTv", dbills, 'DIRECTV SERVICE') )
     session.add( CategoryRE("Nicor", dbills, 'NORTHERN ILL') )
     session.add( CategoryRE("Nicor", dbills, 'Nicor Gas') )
@@ -297,6 +301,8 @@ def create_categories(session):
     session.add( CategoryRE("Gas", travel, "LEXINGTON TRAVEL PLZ", True) )
     session.add( CategoryRE("Gas", travel, "MENTZER I-80", True) )
     session.add( CategoryRE("Gas", travel, "SUPERAMERICA", True) )
+    session.add( CategoryRE("Gas", travel, "SNYDER'S GATEWAY", True) )
+    session.add( CategoryRE("Gas", travel, "MURPHY7248ATWALMRT", True) )
     session.add( CategoryRE("Hotel", travel, "LA QUINTA", True) )
     session.add( CategoryRE("Hotel", travel, "HOTELS\.COM", True) )
     session.add( CategoryRE("Taxi", travel, "BOSTON TAXI", True) )
@@ -316,6 +322,7 @@ def create_categories(session):
     session.add( CategoryRE("Movie Theater", movies, 'AMC YORKTOWN') )
     session.add( CategoryRE("Movie Theater", movies, 'OGDEN 6') )
     session.add( CategoryRE("Movie Theater", movies, 'REGAL CANTERA') )
+    session.add( CategoryRE("Movie Theater", movies, 'REGAL CINEMAS') )
     session.add( CategoryRE("Movie Theater", movies, 'WOODFIELD 20') )
     session.add( CategoryRE("Movie Theater", movies, 'FANDANGO') )
     session.add( CategoryRE("Movie Theater", movies, 'CINEMARK THEAT') )

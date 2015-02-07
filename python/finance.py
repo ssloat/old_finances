@@ -174,7 +174,8 @@ class Finance():
         create_mort_schedule(self.session)
         self.session.commit()
 
-        d = '/home/stephen/Dropbox/BankStatements/'
+        #d = '/home/stephen/Dropbox/BankStatements/'
+        d = './files/'
         finances.files.bofaCreditCardCsv(self.session, d + 'January2012_7377.csv', 2012, 1)
         finances.files.bofaCreditCardCsv(self.session, d + 'February2012_7377.csv', 2012, 2)
         finances.files.bofaCreditCardCsv(self.session, d + 'March2012_7377.csv',   2012, 3)
@@ -212,12 +213,14 @@ class Finance():
         finances.files.bofaCreditCardTxt(self.session, d + 'eStmt_2014-11-13.txt', 2014, 11)
         finances.files.bofaCreditCardTxt(self.session, d + 'eStmt_2014-11-13_amex.txt', 2014, 11)
         finances.files.bofaCreditCardTxt(self.session, d + 'eStmt_2014-12-13.txt', 2014, 12)
+        finances.files.bofaCreditCardTxt(self.session, d + 'eStmt_2015-01-14.txt', 2015, 01)
 
         #?
         #finances.files.usaa('/home/stephen/Downloads/stmt.txt')
         finances.files.bofaCheckingCsv(self.session, d + 'bofa_checking_0.txt', 0, 0)
         finances.files.bofaCheckingTxt(self.session, d + 'bofa_checking_1.txt', 0, 0)
         finances.files.bofaCheckingTxt(self.session, d + 'bofa_checking_2014.txt', 0, 0)
+        finances.files.bofaCheckingTxt(self.session, d + 'bofa_checking_2015.txt', 0, 0)
 
         finances.files.usaa(self.session, d + 'usaa_1.csv', 0, 0)
 
