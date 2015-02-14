@@ -5,7 +5,9 @@ from finances.mort_schedule import MortgageSchedule, create_mort_schedule
 from finances.transaction import Transaction
 import finances.transaction
 import finances.files
+
 from finances.trans_file import TransFile 
+from finances.tax_rates import add_tax_rates
 
 import re
 import datetime
@@ -223,6 +225,8 @@ class Finance():
         finances.files.bofaCheckingTxt(self.session, d + 'bofa_checking_2015.txt', 0, 0)
 
         finances.files.usaa(self.session, d + 'usaa_1.csv', 0, 0)
+
+        add_tax_rates(self.session)
 
         self.session.commit()
 
