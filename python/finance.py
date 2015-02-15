@@ -216,8 +216,8 @@ class Finance():
         finances.files.bofaCreditCardTxt(self.session, d + 'eStmt_2014-11-13_amex.txt', 2014, 11)
         finances.files.bofaCreditCardTxt(self.session, d + 'eStmt_2014-12-13.txt', 2014, 12)
         finances.files.bofaCreditCardTxt(self.session, d + 'eStmt_2015-01-14.txt', 2015, 01)
+        finances.files.bofaCreditCardCsv(self.session, d + 'currentTransaction_8733.csv', 2015, 01)
 
-        #?
         #finances.files.usaa('/home/stephen/Downloads/stmt.txt')
         finances.files.bofaCheckingCsv(self.session, d + 'bofa_checking_0.txt', 0, 0)
         finances.files.bofaCheckingTxt(self.session, d + 'bofa_checking_1.txt', 0, 0)
@@ -235,7 +235,7 @@ if __name__ == '__main__':
     #startdate = datetime.date(2013, 3, 1)
     #startdate = datetime.date(2014, 1, 1)
     startdate = datetime.date(2013, 12, 1)
-    enddate   = datetime.date(2014, 11, 30)
+    enddate   = datetime.date(2015, 1, 31)
     f = Finance('finances.db')
     if sys.argv[1] == 'create':
         f.setup_db()

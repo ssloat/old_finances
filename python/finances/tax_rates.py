@@ -46,22 +46,46 @@ class TaxRate(Base):
            self.name, self.status, self.year, self.start, self.end, self.rate,
        )
 
+def tax(tax_rates, amount):
+    return reduce(lambda a, b: a + _tax(b, amount), tax_rates, 0.0);
+
+def _tax(tax_rate, amount):
+    if tax_rate.start >= amount:
+        return 0
+
+    if tax_rate.end == 0 or amount < tax_rate.end:
+        return tax_rate.rate * (amount - tax_rate.start)
+
+    return tax_rate.rate * (tax_rate.end - tax_rate.start)
 
 def add_tax_rates(session):
     session.add( TaxDeduction('Fed Standard', 2013, 6100, 'Single') )
     session.add( TaxDeduction('Fed Standard', 2014, 6200, 'Single') )
+    session.add( TaxDeduction('Fed Standard', 2015, 6300, 'Single') )
 
     session.add( TaxDeduction('Fed Standard', 2013, 8950, 'Head') )
     session.add( TaxDeduction('Fed Standard', 2014, 9100, 'Head') )
+    session.add( TaxDeduction('Fed Standard', 2015, 9250, 'Head') )
 
     session.add( TaxDeduction('Fed Standard', 2013, 12200, 'Joint') )
     session.add( TaxDeduction('Fed Standard', 2014, 12400, 'Joint') )
+    session.add( TaxDeduction('Fed Standard', 2015, 12600, 'Joint') )
 
     session.add( TaxDeduction('Fed Standard', 2013, 6100, 'Separate') )
     session.add( TaxDeduction('Fed Standard', 2014, 6200, 'Separate') )
+    session.add( TaxDeduction('Fed Standard', 2015, 6300, 'Separate') )
 
-    session.add( TaxDeduction('401k', 2013, 17500) )
-    session.add( TaxDeduction('401k', 2014, 18000) )
+    session.add( TaxDeduction('401k', 2013, 17000) )
+    session.add( TaxDeduction('401k', 2014, 17500) )
+    session.add( TaxDeduction('401k', 2015, 18000) )
+
+    session.add( TaxRate('Federal', 2015, 0,      9225,   .10,  'Single') )
+    session.add( TaxRate('Federal', 2015, 9225,   37450,  .15,  'Single') )
+    session.add( TaxRate('Federal', 2015, 37450,  90750,  .25,  'Single') )
+    session.add( TaxRate('Federal', 2015, 90750,  189300, .28,  'Single') )
+    session.add( TaxRate('Federal', 2015, 189300, 411500, .33,  'Single') )
+    session.add( TaxRate('Federal', 2015, 411500, 413200, .35,  'Single') )
+    session.add( TaxRate('Federal', 2015, 413200, 0,      .396, 'Single') )
 
     session.add( TaxRate('Federal', 2014, 0,      9075,   .10,  'Single') )
     session.add( TaxRate('Federal', 2014, 9075,   36900,  .15,  'Single') )
@@ -79,6 +103,14 @@ def add_tax_rates(session):
     session.add( TaxRate('Federal', 2013, 398350, 400000, .35,  'Single') )
     session.add( TaxRate('Federal', 2013, 400000, 0,      .396, 'Single') )
 
+    session.add( TaxRate('Federal', 2015, 0,      13150,  .10,  'Head') )
+    session.add( TaxRate('Federal', 2015, 13150,  50200,  .15,  'Head') )
+    session.add( TaxRate('Federal', 2015, 50200,  129600, .25,  'Head') )
+    session.add( TaxRate('Federal', 2015, 129600, 209850, .28,  'Head') )
+    session.add( TaxRate('Federal', 2015, 209850, 411500, .33,  'Head') )
+    session.add( TaxRate('Federal', 2015, 411500, 439000, .35,  'Head') )
+    session.add( TaxRate('Federal', 2015, 439000, 0,      .396, 'Head') )
+
     session.add( TaxRate('Federal', 2014, 0,      12950,  .10,  'Head') )
     session.add( TaxRate('Federal', 2014, 12950,  49400,  .15,  'Head') )
     session.add( TaxRate('Federal', 2014, 49400,  127550, .25,  'Head') )
@@ -95,8 +127,8 @@ def add_tax_rates(session):
     session.add( TaxRate('Federal', 2013, 398359, 425000, .35,  'Head') )
     session.add( TaxRate('Federal', 2013, 425000, 0,      .396, 'Head') )
 
-    session.add( TaxRate('SocialSecurity', 2013, 0, 117000, 0.062) )
-    session.add( TaxRate('SocialSecurity', 2014, 0, 118500, 0.062) )
+    session.add( TaxRate('SocialSecurity', 2014, 0, 117000, 0.062) )
+    session.add( TaxRate('SocialSecurity', 2015, 0, 118500, 0.062) )
 
     session.add( TaxRate('Medicare', 2014, 0, 200000, 0.0145, 'Single') )
     session.add( TaxRate('Medicare', 2014, 200000, 0, 0.0235, 'Single') )
@@ -104,5 +136,12 @@ def add_tax_rates(session):
     session.add( TaxRate('Medicare', 2014, 250000, 0, 0.0235, 'Joint') )
     session.add( TaxRate('Medicare', 2014, 0, 125000, 0.0145, 'Separate') )
     session.add( TaxRate('Medicare', 2014, 125000, 0, 0.0235, 'Separate') )
+
+    session.add( TaxRate('Medicare', 2015, 0, 200000, 0.0145, 'Single') )
+    session.add( TaxRate('Medicare', 2015, 200000, 0, 0.0235, 'Single') )
+    session.add( TaxRate('Medicare', 2015, 0, 250000, 0.0145, 'Joint') )
+    session.add( TaxRate('Medicare', 2015, 250000, 0, 0.0235, 'Joint') )
+    session.add( TaxRate('Medicare', 2015, 0, 125000, 0.0145, 'Separate') )
+    session.add( TaxRate('Medicare', 2015, 125000, 0, 0.0235, 'Separate') )
 
     session.commit()
