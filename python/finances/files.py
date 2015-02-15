@@ -40,7 +40,7 @@ def _ccTransCsv(line, year, month):
         return None, None, None
 
     m, d, y = map(int, dt.split('/'))
-    return -1 * float(amt), datetime.date(y, m, d), des
+    return float(amt), datetime.date(y, m, d), des
 
 def bofaCheckingCsv(session, filename, year, month):
     _readFile(session, filename, 'BOA Checking', _chkTransCsv, year, month)
