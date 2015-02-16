@@ -8,7 +8,7 @@ class TaxDeduction(Base):
     id       = Column(Integer, primary_key=True)
     name     = Column(String)
     year     = Column(Integer)
-    value    = Column(Integer)
+    amount   = Column(Integer)
     status   = Column(String)
 
     def __init__(self, name, year, amount, status=None):

@@ -3,6 +3,7 @@ from finances import Base, Session
 from finances.category import Category, CategoryRE, create_categories
 from finances.mort_schedule import MortgageSchedule, create_mort_schedule
 from finances.transaction import Transaction
+from finances.budget import create_budget
 import finances.transaction
 import finances.files
 
@@ -227,6 +228,7 @@ class Finance():
         finances.files.usaa(self.session, d + 'usaa_1.csv', 0, 0)
 
         add_tax_rates(self.session)
+        create_budget(self.session)
 
         self.session.commit()
 
