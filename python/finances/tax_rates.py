@@ -79,6 +79,10 @@ def add_tax_rates(session):
     session.add( TaxDeduction('401k', 2014, 17500) )
     session.add( TaxDeduction('401k', 2015, 18000) )
 
+    session.add( TaxRate('Illinois', 2015, 0, 0, 0.0375, 'Single') )
+    session.add( TaxRate('Illinois', 2014, 0, 0, 0.05,   'Single') )
+    session.add( TaxRate('Illinois', 2013, 0, 0, 0.05,   'Single') )
+
     session.add( TaxRate('Federal', 2015, 0,      9225,   .10,  'Single') )
     session.add( TaxRate('Federal', 2015, 9225,   37450,  .15,  'Single') )
     session.add( TaxRate('Federal', 2015, 37450,  90750,  .25,  'Single') )
