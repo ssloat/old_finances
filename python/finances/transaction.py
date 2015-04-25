@@ -67,6 +67,8 @@ def bac_mortgage(session, date, amt, trans_file):
     session.add( Transaction(date, 'BAC', mprin, -1 * ms.principal, trans_file) )
     session.add( Transaction(date, 'BAC', mint, amt + ms.principal, trans_file) )
 
+AMTS = None
+
 def bofa(session, tdate, amt, trans_file):
     cats = [ ('taxable income', 'Bofa'), ('preTax', '401k'),
             ('inc taxes', 'Fed Taxes'), ('inc taxes', 'IL Taxes'), 
@@ -76,11 +78,22 @@ def bofa(session, tdate, amt, trans_file):
             ('preTax', 'Metra'), ('car', 'Metra'),
         ]
 
-    amts = {}
+    global AMTS
+    if not AMTS:
+        AMTS = {}
+        with open('files/salary.txt') as f:
+            for line in f.read().splitlines():
+                if not line or line[0] == '#' or ':' not in line: continue
+                line = line.replace(' ', '')
+                line = line.replace('(', '')
+                line = line.replace(')', '')
+                k, v = line.split(':')
+
+                AMTS[int(k)] = map(float, [x for x in v.split(',') if x])
 
     c = session.query(Category).filter_by(name="bofa chk").first()
     session.add( Transaction(tdate, "xfer to USAA", c, -25, trans_file) )
-    vals = amts[int(amt)]
+    vals = AMTS[int(amt)]
     yearly = True if amt > 10000.0 else False
     for i in range(len(vals)):
         c = session.query(Category).filter_by(name=cats[i][0]).first()
