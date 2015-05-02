@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    <table>
+    {% for t in transactions %}
+    <tr>
+        <td>{{ t.tdate }}</td> 
+        <td>{{ t.name }}</td> 
+        <td>{{ t.amount }}</td> 
+    {% endfor %}
+    </table>
+{% endblock %}
