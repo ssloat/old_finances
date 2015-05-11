@@ -12,7 +12,7 @@ create_categories(db.session)
 create_mort_schedule(db.session)
 
 #d = '/home/stephen/Dropbox/BankStatements/'
-d = './files/'
+d = '../files/'
 finances.models.files.bofaCreditCardCsv(db.session, d + 'January2012_7377.csv', 2012, 1)
 finances.models.files.bofaCreditCardCsv(db.session, d + 'February2012_7377.csv', 2012, 2)
 finances.models.files.bofaCreditCardCsv(db.session, d + 'March2012_7377.csv',   2012, 3)

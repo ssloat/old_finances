@@ -73,7 +73,7 @@ def bofa(session, tdate, amt, trans_file):
     global AMTS
     if not AMTS:
         AMTS = {}
-        with open('files/salary.txt') as f:
+        with open('../files/salary.txt') as f:
             for line in f.read().splitlines():
                 if not line or line[0] == '#' or ':' not in line: continue
                 line = line.replace(' ', '')

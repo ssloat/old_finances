@@ -1,10 +1,18 @@
 {% extends "base.html" %}
+#form.startdate(class='datepicker')
 {% block content %}
+    <form action="#" method="post" name="trans">
+        {{ form.hidden_tag() }}
+        <p>Start Date: {{ form.startdate(size=12) }}
+        End Date: {{ form.enddate(size=12) }}
+        <input type="submit" value="Get Trans"></p>
+    </form>
     <table>
     {% for t in transactions %}
     <tr>
         <td>{{ t.tdate }}</td> 
         <td>{{ t.name }}</td> 
+        <td><a href="transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
         <td>{{ t.amount }}</td> 
     {% endfor %}
     </table>

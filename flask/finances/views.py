@@ -1,8 +1,10 @@
-from flask import render_template
+from flask import render_template, session, url_for
 from finances import db, app
 from finances.models.transaction import Transaction
 from finances.models.category import Category
+from finances.forms import TransactionsForm
 import datetime
+from monthdelta import monthdelta
 
 @app.route('/')
 @app.route('/index')
@@ -23,23 +25,27 @@ def index():
                            user=user,
                            posts=posts)
 
+@app.route('/categories')
+def categories():
+    q = db.session.query(Category)
+    return render_template('categories.html', categories=q)
 
-@app.route('/transactions') 
-@app.route('/transactions/<category>') 
-def transactions(category=None): 
-    fr = datetime.date(2015, 1, 1)
-    to = datetime.date(2015, 12, 31)
 
-    if category:
-        q = db.session.query(Transaction).join(Category).\
-                filter(Category.name=='giving', Transaction.tdate >= fr,
-                        Transaction.tdate <= to).\
-                order_by(Transaction.tdate)
-    else:
-        q = db.session.query(Transaction).\
-                filter(Transaction.tdate >= fr,
-                        Transaction.tdate <= to).\
-                order_by(Transaction.tdate)
+@app.route('/transactions', methods=['GET', 'POST']) 
+@app.route('/transactions/<category_id>', methods=['GET', 'POST']) 
+def transactions(category_id=None): 
+    form = TransactionsForm()
+    if form.validate_on_submit():
+        print form.startdate.data
+        print form.enddate.data
 
-    return render_template('transactions.html', transactions=q)
+    q = db.session.query(Transaction)
+    if category_id:
+        q = q.join(Category).filter(Category.id==int(category_id))
+
+    fr = form.startdate.data
+    to = form.enddate.data
+    q = q.filter(Transaction.tdate>=fr, Transaction.tdate<=to).order_by(Transaction.tdate)
+
+    return render_template('transactions.html', form=form, transactions=q)
 

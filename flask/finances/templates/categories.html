@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+    <table>
+    {% for c in categories %}
+    <tr>
+        <td><a href="transactions/{{ c.id }}">{{ c.name }}</a></td> 
+    {% endfor %}
+    </table>
+{% endblock %}
