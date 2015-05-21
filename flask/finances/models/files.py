@@ -2,14 +2,15 @@ from finances.models.category import Category, CategoryRE
 from finances.models.transaction import Transaction
 from finances.models.trans_file import TransFile
 import finances.models.transaction
+from finances import db
 
 import re
 import datetime
 from os import path
 
 
-def bofaCreditCardTxt(session, filename, year, month):
-    _readFile(session, filename, 'BOA Credit Card', _ccTransTxt, year, month)
+def bofaCreditCardTxt(filename, year, month):
+    _readFile(filename, 'BOA Credit Card', _ccTransTxt, year, month)
 
 def _ccTransTxt(line, year, month):
     line = line.strip()
@@ -26,8 +27,8 @@ def _ccTransTxt(line, year, month):
 
     return -1 * float(amt), dt, des
 
-def bofaCreditCardCsv(session, filename, year, month):
-    _readFile(session, filename, 'BOA Credit Card', _ccTransCsv, year, month)
+def bofaCreditCardCsv(filename, year, month):
+    _readFile(filename, 'BOA Credit Card', _ccTransCsv, year, month)
 
 def _ccTransCsv(line, year, month):
     line = line.strip().replace("\"", "")
@@ -39,8 +40,8 @@ def _ccTransCsv(line, year, month):
     m, d, y = map(int, dt.split('/'))
     return float(amt), datetime.date(y, m, d), des
 
-def bofaCheckingCsv(session, filename, year, month):
-    _readFile(session, filename, 'BOA Checking', _chkTransCsv, year, month)
+def bofaCheckingCsv(filename, year, month):
+    _readFile(filename, 'BOA Checking', _chkTransCsv, year, month)
 
 def _chkTransCsv(line, year, month):
     if not re.match('^\d\d/\d\d/\d\d\d\d,"', line):
@@ -56,8 +57,8 @@ def _chkTransCsv(line, year, month):
 
     return float(amt), dt, des
 
-def bofaCheckingTxt(session, filename, year, month):
-    _readFile(session, filename, 'BOA Checking', _chkTransTxt, year, month)
+def bofaCheckingTxt(filename, year, month):
+    _readFile(filename, 'BOA Checking', _chkTransTxt, year, month)
 
 def _chkTransTxt(line, year, month):
     if not re.match('^\d\d/\d\d/\d\d\d\d ', line):
@@ -77,8 +78,8 @@ def _chkTransTxt(line, year, month):
 
     return float(amt), dt, des
 
-def usaa(session, filename, year, month):
-    _readFile(session, filename, 'USAA', _usaa, year, month)
+def usaa(filename, year, month):
+    _readFile(filename, 'USAA', _usaa, year, month)
 
 def _usaa(line, year, month):
     if not re.match('posted,', line):
@@ -91,13 +92,13 @@ def _usaa(line, year, month):
     return float(amt), datetime.date(y, m, d), des
 
 
-def _readFile(session, filename, acc_name, parser, year, month):
-    uncat = session.query(Category).filter_by(name='uncategorized').first()
-    res = session.query(CategoryRE).all()
+def _readFile(filename, acc_name, parser, year, month):
+    uncat = db.session.query(Category).filter_by(name='uncategorized').first()
+    res = db.session.query(CategoryRE).all()
     print "read " + filename
 
     trans_file = TransFile(path.basename(filename), acc_name)
-    session.add( trans_file )
+    db.session.add( trans_file )
     with open(filename, 'r') as f:
         for line in f:
             amt, dt, des = parser(line, year, month)
@@ -113,17 +114,17 @@ def _readFile(session, filename, acc_name, parser, year, month):
                 des = "Resurrection"
 
             if re.match("JPM", des) and amt==-1333.66:
-                finances.models.transaction.mortgage(session, dt, amt, trans_file)
+                finances.models.transaction.mortgage(dt, amt, trans_file)
             elif re.match("Bank of America DES:MORTGAGE", des):
-                finances.models.transaction.bac_mortgage(session, dt, amt, trans_file)
+                finances.models.transaction.bac_mortgage(dt, amt, trans_file)
 
             elif re.match("BANK OF AMERICA DES:PAYROLL", des):
-                finances.models.transaction.bofa(session, dt, amt, trans_file)
+                finances.models.transaction.bofa(dt, amt, trans_file)
 
             else:
                 for r in res:
                     if re.search(r.pattern, des):
-                        session.add( 
+                        db.session.add( 
                                 Transaction(dt, r.name, r.category, amt,
                                     trans_file, yearly=yearly or r.yearly
                                 ) 
@@ -131,7 +132,7 @@ def _readFile(session, filename, acc_name, parser, year, month):
                         break
                 else:
                     print "Uncategorized: %s, %s, %s" % (dt, des, amt)
-                    session.add( Transaction(dt, des, uncat, amt, trans_file) )
+                    db.session.add( Transaction(dt, des, uncat, amt, trans_file) )
 
     f.closed
 

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+    <form action="#" method="post" name="trans">
+        {{ form.hidden_tag() }}
+        <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()') }}
+        End Date: {{ form.enddate(size=12, onchange='this.form.submit()') }}
+        <input type="submit" value="Get Trans"></p>
+    </form>
+    <table>
+    <tr>
+        {% for item in table.headings %}
+        <th>{{item}}</th>
+        {% endfor %}
+    </tr>
+    {% for row in table.rows %}
+    <tr>
+        <td>{{row.category}}</td>
+        {% for item in row.data %}
+        <td><a href="tritransactions/{{row.cat_id}}/{{item[1]}}">{{item[0]}}</td>
+        {% endfor %}
+        <td>{{row.average}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

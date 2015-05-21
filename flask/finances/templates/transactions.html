@@ -1,19 +1,29 @@
 {% extends "base.html" %}
 #form.startdate(class='datepicker')
 {% block content %}
+    {% if form %}
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
-        <p>Start Date: {{ form.startdate(size=12) }}
-        End Date: {{ form.enddate(size=12) }}
+        <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()') }}
+        End Date: {{ form.enddate(size=12, onchange='this.form.submit()') }}
+        Category: {{ form.category(onchange='this.form.submit()') }}
         <input type="submit" value="Get Trans"></p>
     </form>
+    {% endif %}
     <table>
-    {% for t in transactions %}
-    <tr>
-        <td>{{ t.tdate }}</td> 
-        <td>{{ t.name }}</td> 
-        <td><a href="transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
-        <td>{{ t.amount }}</td> 
-    {% endfor %}
+        <tr>
+            {% for table in transactions %}
+            <td valign="top"><table>
+                {% for t in table %}
+                <tr>
+                    <td>{{ t.tdate }}</td> 
+                    <td>{{ t.name }}</td> 
+                    <td><a href="transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
+                    <td>{{ t.amount }}</td> 
+                {% endfor %}
+                </tr>
+            </table></td>
+            {% endfor %}
+        </tr>
     </table>
 {% endblock %}

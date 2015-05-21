@@ -16,7 +16,7 @@ class MortgageSchedule(db.Model):
     def __repr__(self):
        return "<MortgageSchedule('%s, %s')>" % (self.date, self.principal)
 
-def create_mort_schedule(session):
+def create_mort_schedule():
     schs = [
         414.40,
         415.91,
@@ -39,6 +39,6 @@ def create_mort_schedule(session):
 #    md = MonthDelta(1)
     d = datetime.date(2012, 1, 1)
     for s in schs:
-        session.add( MortgageSchedule(d, s) )
+        db.session.add( MortgageSchedule(d, s) )
         d = d + monthdelta.monthdelta(1)
     
