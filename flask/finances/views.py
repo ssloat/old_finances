@@ -80,3 +80,7 @@ def budget(): #category_id=None):
     table = monthly(form.startdate.data, form.enddate.data)
 
     return render_template('budget.html', form=form, table=table)
+
+@app.route('/example')
+def example():
+    return render_template('example.html')

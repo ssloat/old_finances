@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-#form.startdate(class='datepicker')
+{% block navbar_transactions %} class="active"{% endblock %}
 {% block content %}
     {% if form %}
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
-        <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()') }}
-        End Date: {{ form.enddate(size=12, onchange='this.form.submit()') }}
+        <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()', class='datepicker') }}
+        End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}
         Category: {{ form.category(onchange='this.form.submit()') }}
         <input type="submit" value="Get Trans"></p>
     </form>
@@ -19,7 +19,7 @@
                     <td>{{ t.tdate }}</td> 
                     <td>{{ t.name }}</td> 
                     <td><a href="transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
-                    <td>{{ t.amount }}</td> 
+                    <td align="right">{{ t.amount }}</td> 
                 {% endfor %}
                 </tr>
             </table></td>

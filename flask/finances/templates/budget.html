@@ -1,25 +1,48 @@
 {% extends "base.html" %}
+{% block head %}
+    <!-- treetable http://ludo.cubicphuse.nl/jquery-treetable/ -->
+    <!-- treetable ajax persist https://github.com/jughead/jquery-treetable-ajax-persist -->
+    <link rel="stylesheet" href="/static/css/jquery.treetable.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/jquery.treetable.theme.default.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/screen.css" type="text/css" />
+{% endblock %}
+{% block navbar_budget %} class="active"{% endblock %}
 {% block content %}
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
-        <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()') }}
-        End Date: {{ form.enddate(size=12, onchange='this.form.submit()') }}
+        <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()', class='datepicker') }}
+        End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}
         <input type="submit" value="Get Trans"></p>
     </form>
-    <table>
-    <tr>
-        {% for item in table.headings %}
-        <th>{{item}}</th>
-        {% endfor %}
-    </tr>
+    <table id="budget-table">
+    <thead>
+        <tr>
+            {% for item in table.headings %}
+            <th width=50>{{item}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
     {% for row in table.rows %}
-    <tr>
-        <td>{{row.category}}</td>
-        {% for item in row.data %}
-        <td><a href="tritransactions/{{row.cat_id}}/{{item[1]}}">{{item[0]}}</td>
-        {% endfor %}
-        <td>{{row.average}}</td>
-    </tr>
+        <tr data-tt-id="{{row.category.id}}" {% if row.category.parent %} data-tt-parent-id="{{row.category.parent.id}}" {% endif %}>
+            <td class="nowrap">{{row.category.name}}</td>
+            <td>{{row.average}}</td>
+            {% for item in row.data %}
+            <td align="right"><a href="tritransactions/{{row.category.id}}/{{item[1]}}">{{item[0]}}</td>
+            {% endfor %}
+        </tr>
     {% endfor %}
+    </tbody>
     </table>
 {% endblock %}
+{% block scripts %}
+    <script src="/static/js/jquery.treetable-ajax-persist.js"></script>
+    <script src="/static/js/jquery.treetable.js"></script>
+    <script src="/static/js/persist-min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#budget-table").agikiTreeTable({persist: true, persistStoreName: "files"});
+    });
+    </script>
+{% endblock %}
+
