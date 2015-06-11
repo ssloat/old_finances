@@ -3,6 +3,7 @@ from finances import db
 import finances.models.files
 from finances.models.category import create_categories
 from finances.models.mort_schedule import create_mort_schedule
+from finances.models.investments import create_investments
 
 db.create_all()
 
@@ -67,6 +68,7 @@ finances.models.files.usaa(d + 'usaa_1.csv', 0, 0)
 
 #add_tax_rates(db.session)
 #create_budget(db.session)
+create_investments()
 
 db.session.commit()
 
