@@ -63,12 +63,12 @@ def bac_mortgage(date, amt, trans_file):
 AMTS = None
 
 def bofa(tdate, amt, trans_file):
-    cats = [ ('taxable income', 'Bofa'), ('preTax', '401k'),
+    cats = [ ('bofa income', 'Bofa'), ('preTax', '401k'),
             ('inc taxes', 'Fed Taxes'), ('inc taxes', 'IL Taxes'), 
             ('inc taxes', 'Soc Sec'), ('inc taxes', 'Medicaid'),
             ('preTax', 'medical'), ('preTax', 'dental'),
             ('preTax', 'vision'), ('preTax', 'hsa'),
-            ('preTax', 'Metra'), ('car', 'Metra'),
+            ('preTax', 'Metra'), ('monthly', 'Metra'),
         ]
 
     global AMTS
@@ -127,13 +127,12 @@ def monthly(from_date, to_date):
             results[cid] = results.get(cid) or dict([(k, []) for k in keys])
             results[cid][t.tdate.strftime('%Y-%m')].append(t.amount) 
 
-    table = {'headings': ['category'] + keys + ['Average'], 'rows': []}
+    table = {'headings': ['category', 'average'] + keys[::-1], 'rows': []}
     top = db.session.query(Category).filter(Category.name=='top').first()
     for cat in [top]+allChildren():
-        cols = [(sum(results.get(cat.id, {k: []}).get(k, []), 0.0), k) for k in keys]
+        cols = [(sum(results.get(cat.id, {k: []}).get(k, []), 0.0), k) for k in keys[::-1]]
         table['rows'].append({
-            'category': cat.name,
-            'cat_id': cat.id,
+            'category': cat,
             'data': cols, 
             'average': "%.2f" % (sum([c[0] for c in cols]) / len(cols)),
         })
