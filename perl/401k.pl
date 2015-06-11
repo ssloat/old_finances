@@ -3,15 +3,21 @@ use warnings;
 
 use File::Slurp 'read_file';
 use Data::Dumper;
+use Carp;
 
-chomp(my @lines = read_file('files/401k 2014.htm'));
+#chomp(my @lines = read_file('../files/401k 2014.htm'));
+chomp(my @lines = read_file($ARGV[0]));
 
 my $table = q{};
 for my $line (@lines) {
     if ($line =~ m#.*<table ([^/]*?)>#) {
-        my %kvs = map {split /=/} grep {s/"//g} split /\s+/, $1;
-        if (($kvs{'id'} // q{}) eq 'sortable') {
-            $table = $1;
+        my $match = $1;
+        if ($match =~ m#id="sortable"#) {
+            $table = $match;
+            #my %kvs = map {split /=/} grep {s/"//g} split /\s+/, $match;
+            #if (($kvs{'id'} // q{}) eq 'sortable') {
+            #    $table = $match;
+            #}
         }
     }
     elsif ($table) {
@@ -38,31 +44,43 @@ for my $row ($table =~ m#(<tr[ >].*?</tr>)#g) {
 my %types;
 for (@entries) {
     my @entry = @$_;
-    if ($entry[2] eq 'CONTRIBUTION') {
+    if ($entry[2] eq 'CONTRIBUTION' || $entry[2] eq 'Transfer In/Out' || $entry[2] eq 'Investment Gain (Loss)') {
+        next if $entry[4] == 0;
 
         for my $item (@entry[5..$#entry]) {
             next if !$item->[0];
             my $k = 
-                $item->[0] eq '07 - PRE TAX CONTRIBUTIONS'  ? 'me' 
+                $item->[0] eq '07 - PRE TAX CONTRIBUTIONS'  ? 'Personal Contrib' 
               : $item->[0] eq '14 - SAFE HARBOR MATCH'      ? 'BofA Match' 
+              : $item->[0] eq '17 - PRE SAFE HARBOR MATCH'  ? 'BofA Match' 
+              : $item->[0] eq '01 - MATCH I'                ? 'BofA Match' 
+              : $item->[0] eq '04 - MATCH V/STOCK FUND DIV' ? 'BofA Match' 
               : $item->[0] eq '20 - ANNUAL COMPANY CONTRIB' ? 'Pension' 
-              : undef;
-
-            if (!$k) {
-                print "Unknown:  $item->[0]\n";
-                next;
-            }
+              : $item->[0] eq '16 - REWARDING SUCCESS PLAN' ? 'Rewarding Success' 
+              : confess "Unknown Contribution:  $item->[0]";
 
             $item->[1] =~ s/[\$,]//g;
-            print "$entry[0], $entry[1], $k, $item->[1], $item->[2]\n";
+            print "$entry[0],$entry[1],$k,$item->[1],$item->[2]\n";
             $types{$k} += $item->[1];
         }
     }
-    elsif ($entry[2] eq 'Dividends' || $entry[2] eq 'RECORDKEEPING FEE') {
+    elsif ($entry[2] eq 'Dividends' || $entry[2] eq 'RECORDKEEPING FEE'
+        || $entry[2] eq 'Exchanges' || $entry[2] eq 'Adjustments'
+        || $entry[2] eq 'TRUSTEE FEE'
+    ) {
         $entry[3] =~ s/[\$,]//g;
-        print "$entry[0], $entry[1], $entry[2], $entry[3], $entry[4]\n";
+        $entry[4] =~ s/[\$,]//g;
+        print "$entry[0],$entry[1],$entry[2],$entry[3],$entry[4]\n";
         $types{$entry[2]} += $entry[3];
+    }
+    #elsif ($entry[2] eq 'Investment Gain (Loss)' || $entry[2] eq 'Transfer In/Out') {
+    elsif ($entry[2] eq 'Investment Gain (Loss)') {
+        next if $entry[4] == 0;
+        print "$entry[0],$entry[1],$entry[2],$entry[3],$entry[4]\n";
+    }
+    else {
+        confess "Unknown Action --$entry[2]: @entry\n";
     }
 }
 
-print Dumper(\%types) . "\n";
+#print Dumper(\%types) . "\n";
