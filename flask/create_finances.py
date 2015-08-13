@@ -1,9 +1,12 @@
 from finances import db
 
+import datetime
+
 import finances.models.files
 from finances.models.category import create_categories
 from finances.models.mort_schedule import create_mort_schedule
 from finances.models.investments import create_investments
+from finances.models.stock import load_prices
 
 db.create_all()
 
@@ -56,7 +59,8 @@ finances.models.files.bofaCreditCardTxt(d + 'eStmt_2015-02-16.txt', 2015, 02)
 finances.models.files.bofaCreditCardTxt(d + 'eStmt_2015-03-16.txt', 2015, 03)
 finances.models.files.bofaCreditCardTxt(d + 'eStmt_2015-04-16.txt', 2015, 04)
 finances.models.files.bofaCreditCardTxt(d + 'eStmt_2015-05-16.txt', 2015, 05)
-finances.models.files.bofaCreditCardCsv(d + 'currentTransaction_8733.csv', 2015, 01)
+finances.models.files.bofaCreditCardTxt(d + 'eStmt_2015-06-16.txt', 2015, 06)
+#finances.models.files.bofaCreditCardCsv(d + 'currentTransaction_8733.csv', 2015, 01)
 
 #finances.models.files.usaa('/home/stephen/Downloads/stmt.txt')
 finances.models.files.bofaCheckingCsv(d + 'bofa_checking_0.txt', 0, 0)
@@ -69,6 +73,8 @@ finances.models.files.usaa(d + 'usaa_1.csv', 0, 0)
 #add_tax_rates(db.session)
 #create_budget(db.session)
 create_investments()
+for yr in range(2008, 2016):
+    load_prices(datetime.date(yr, 1, 1), datetime.date(yr, 12, 31))
 
 db.session.commit()
 

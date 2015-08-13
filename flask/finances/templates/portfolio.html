@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/static/css/jquery.treetable.theme.default.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/screen.css" type="text/css" />
 {% endblock %}
-{% block navbar_budget %} class="active"{% endblock %}
+{% block navbar_portfolio %} class="active"{% endblock %}
 {% block content %}
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
@@ -14,24 +14,21 @@
         End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}
         <input type="submit" value="Get Trans"></p>
     </form>
-    <table id="budget-table">
+    <table id="portfolio-table">
     <thead>
         <tr>
             {% for item in table.headings %}
-            <th width=50>{{item}}</th>
+            <th>{{item}}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
     {% for row in table.rows %}
-        <tr data-tt-id="{{row.category.id}}" {% if row.category.parent %} data-tt-parent-id="{{row.category.parent.id}}" {% endif %}>
-            <td class="nowrap">{{row.category.name}}</td>
-            <td align="right">{{row.average}}</td>
-            {% for item in row.data %}
-            <td align="right"><a href="tritransactions/{{row.category.id}}/{{item[1]}}">{{item[0]}}</td>
+        <tr data-tt-id="{{row.name}}" {% if row.parent %} data-tt-parent-id="{{row.parent}}" {% endif %}>
+            <td class="nowrap"><a href="fundprices/{{ row.name }}">{{row.name}}</a></td>
+            {% for v in row.data %}
+            <td>{{v|money}}</td>
             {% endfor %}
-            <td align="right">{{row.yearly}}</td>
-            <td align="right">{{row.total}}</td>
         </tr>
     {% endfor %}
     </tbody>
@@ -43,8 +40,9 @@
     <script src="/static/js/persist-min.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
-        $("#budget-table").agikiTreeTable({persist: true, persistStoreName: "files"});
+        $("#portfolio-table").agikiTreeTable({persist: true, persistStoreName: "files"});
     });
     </script>
 {% endblock %}
+
 

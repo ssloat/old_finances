@@ -63,7 +63,7 @@ def bac_mortgage(date, amt, trans_file):
 AMTS = None
 
 def bofa(tdate, amt, trans_file):
-    cats = [ ('bofa income', 'Bofa'), ('preTax', '401k'),
+    cats = [ ('bofa income', 'Bofa'), ('journal', '401k'),
             ('inc taxes', 'Fed Taxes'), ('inc taxes', 'IL Taxes'), 
             ('inc taxes', 'Soc Sec'), ('inc taxes', 'Medicaid'),
             ('preTax', 'medical'), ('preTax', 'dental'),
@@ -109,7 +109,7 @@ def monthly(from_date, to_date):
     catids = dict([(c.id, c.name) for c in cats])
     keys = [m.strftime('%Y-%m') for m in months]
     ts = db.session.query(Transaction)\
-        .filter(Transaction.tdate>=from_date, Transaction.tdate<to_date, Transaction.yearly==False)
+        .filter(Transaction.tdate>=from_date, Transaction.tdate<to_date)
 
     cat_keys = {} 
     results = {}
@@ -124,17 +124,22 @@ def monthly(from_date, to_date):
             cat_keys[t.category.id].append(tmp.id)
 
         for cid in cat_keys[t.category.id]:
-            results[cid] = results.get(cid) or dict([(k, []) for k in keys])
-            results[cid][t.tdate.strftime('%Y-%m')].append(t.amount) 
+            results[cid] = results.get(cid) or dict([(k, []) for k in keys + ['yearly']])
+            if t.yearly:
+                results[cid]['yearly'].append(t.amount) 
+            else:
+                results[cid][t.tdate.strftime('%Y-%m')].append(t.amount) 
 
-    table = {'headings': ['category', 'average'] + keys[::-1], 'rows': []}
-    top = db.session.query(Category).filter(Category.name=='top').first()
-    for cat in [top]+allChildren():
-        cols = [(sum(results.get(cat.id, {k: []}).get(k, []), 0.0), k) for k in keys[::-1]]
+    table = {'headings': ['category', 'average'] + keys[::-1] + ['yearly', 'total'], 'rows': []}
+    top = db.session.query(Category).filter(Category.name=='transactions').first()
+    for cat in [top]+allChildren(top):
+        cols = [(sum(results.get(cat.id, {k: []}).get(k, []), 0.0), k) for k in keys[::-1] + ['yearly']]
         table['rows'].append({
             'category': cat,
-            'data': cols, 
-            'average': "%.2f" % (sum([c[0] for c in cols]) / len(cols)),
+            'data': cols[:-1], 
+            'yearly': cols[-1][0],
+            'total': sum([c[0] for c in cols]),
+            'average': "%.2f" % (sum([c[0] for c in cols[:-1]]) / (len(cols)-1)),
         })
 
     return table

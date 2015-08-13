@@ -2,28 +2,19 @@ from flask import render_template, session, url_for
 from finances import db, app
 from finances.models.transaction import Transaction, monthly
 from finances.models.category import Category, allChildren, categoriesSelectBox
-from finances.forms import TransactionsForm, BudgetForm
+from finances.forms import TransactionsForm, DateRangeForm
+
+from finances.models import investments 
+
 import datetime
 from monthdelta import monthdelta
 
-@app.route('/')
-@app.route('/index')
-def index():
-    user = {'nickname': 'Miguel'}
-    posts = [
-        {
-            'author': {'nickname': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'nickname': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html',
-                           title='Home',
-                           user=user,
-                           posts=posts)
+@app.template_filter('money')
+def money_filter(s):
+    return "${:,.2f}".format(s)
+
+
+
 
 @app.route('/categories')
 def categories():
@@ -73,13 +64,28 @@ def transactions(): #category_id=None):
 
     return render_template('transactions.html', form=form, transactions=[q])
 
+@app.route('/fundprices/<fund>', methods=['GET', 'POST']) 
+def fundprices(fund): 
+    form = DateRangeForm()
+    table = investments.fundprices(fund, form.startdate.data, form.enddate.data)
+
+    return render_template('fundprices.html', form=form, prices=table)
+
 @app.route('/budget', methods=['GET', 'POST']) 
 def budget(): #category_id=None): 
-    form = BudgetForm()
+    form = DateRangeForm()
 
     table = monthly(form.startdate.data, form.enddate.data)
 
     return render_template('budget.html', form=form, table=table)
+
+@app.route('/portfolio', methods=['GET', 'POST']) 
+def portfolio():
+    form = DateRangeForm()
+    table = investments.portfolio(form.startdate.data, form.enddate.data)
+
+    return render_template('portfolio.html', form=form, table=table)
+
 
 @app.route('/example')
 def example():

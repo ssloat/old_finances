@@ -16,6 +16,6 @@ class TransactionsForm(Form):
     enddate   = DateField('enddate', format='%Y-%m-%d', default=datetime.date.today())
     category  = SelectField('category', coerce=int)
 
-class BudgetForm(Form):
+class DateRangeForm(Form):
     startdate = DateField('startdate', format='%Y-%m-%d', default=datetime.date.today() - monthdelta(12))
     enddate   = DateField('enddate', format='%Y-%m-%d', default=datetime.date.today())

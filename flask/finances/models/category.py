@@ -72,6 +72,7 @@ def create_categories():
     inc      = Category('bofa income', bofa)
     taxes    = Category('inc taxes', bofa)
     pretax   = Category('preTax', bofa)
+    match    = Category('401k match', bofa)
 
     give     = Category('giving', trans)
 
@@ -114,9 +115,9 @@ def create_categories():
     nontaxable = Category('nontaxable income', trans)
 
     db.session.add_all([top, 
-        jnl, boachk, 
+        jnl, boachk, _401k,
         trans,
-        bofa, inc, taxes, pretax, 
+        bofa, inc, taxes, pretax, match,
         give, 
         house, rent, mort, mort_int, mort_prin, htax, hrep, utils, h_ins,
         budget, monthly, 
@@ -125,6 +126,58 @@ def create_categories():
         uncat, chks, clothes, cash, girl, dates, presents, travel,
         nontaxable,
     ])
+
+def create_category_res():
+    jnl    = db.session.query(Category).filter_by(name='journal').first()
+    boachk = db.session.query(Category).filter_by(name='bofa chk').first()
+
+    trans = db.session.query(Category).filter_by(name='transactions').first()
+
+    bofa     = db.session.query(Category).filter_by(name='bofa').first()
+    inc      = db.session.query(Category).filter_by(name='bofa income').first()
+    taxes    = db.session.query(Category).filter_by(name='inc taxes').first()
+    pretax   = db.session.query(Category).filter_by(name='preTax').first()
+
+    give     = db.session.query(Category).filter_by(name='giving').first()
+
+    house     = db.session.query(Category).filter_by(name='house').first()
+    rent      = db.session.query(Category).filter_by(name='rent').first()
+    mort      = db.session.query(Category).filter_by(name='mortgage').first()
+    mort_int  = db.session.query(Category).filter_by(name='mortgage int').first()
+    mort_prin = db.session.query(Category).filter_by(name='mortgage prin').first()
+    htax      = db.session.query(Category).filter_by(name='property tax').first()
+    hrep      = db.session.query(Category).filter_by(name='house maint').first()
+    utils     = db.session.query(Category).filter_by(name='house utilities').first()
+    h_ins     = db.session.query(Category).filter_by(name='house insurance').first()
+
+    budget   = db.session.query(Category).filter_by(name='budget').first()
+    monthly  = db.session.query(Category).filter_by(name='monthly').first()
+
+    car      = db.session.query(Category).filter_by(name='car').first()
+    kona     = db.session.query(Category).filter_by(name='kona').first()
+    ent      = db.session.query(Category).filter_by(name='entertainment').first()
+    group    = db.session.query(Category).filter_by(name='group outing').first()
+    amazon   = db.session.query(Category).filter_by(name='amazon').first()
+    movies   = db.session.query(Category).filter_by(name='movies').first()
+    sports   = db.session.query(Category).filter_by(name='sports').first()
+
+    food     = db.session.query(Category).filter_by(name='food').first()
+    fin      = db.session.query(Category).filter_by(name='food in').first()
+    fout     = db.session.query(Category).filter_by(name='food out').first()
+    fogroup  = db.session.query(Category).filter_by(name='fo group').first()
+    fosolo   = db.session.query(Category).filter_by(name='fo solo').first()
+
+    uncat    = db.session.query(Category).filter_by(name='uncategorized').first()
+    chks     = db.session.query(Category).filter_by(name='checks').first()
+    clothes  = db.session.query(Category).filter_by(name='clothes').first()
+    cash     = db.session.query(Category).filter_by(name='cash').first()
+    girl     = db.session.query(Category).filter_by(name='girl').first()
+    dates    = db.session.query(Category).filter_by(name='dates').first()
+    presents = db.session.query(Category).filter_by(name='presents').first()
+    travel   = db.session.query(Category).filter_by(name='travel').first()
+
+    nontaxable = db.session.query(Category).filter_by(name='nontaxable income').first()
+
 
     db.session.add( CategoryRE("Check", chks, r"^Check ") )
 
@@ -140,6 +193,8 @@ def create_categories():
     db.session.add( CategoryRE("Tax Rebate", nontaxable, r"Tax Refund ID", True) )
 
     db.session.add( CategoryRE("Bofa chk withdrawal ", cash, r"BKOFAMERICA ATM.*WITHDRWL") )
+    db.session.add( CategoryRE("Bofa chk withdrawal ", cash, r"WITHDRWL 520") )
+    db.session.add( CategoryRE("Bofa chk withdrawal ", cash, r"ATM Operator Refund") )
     db.session.add( CategoryRE("USAA chk withdrawal ", cash, r"444 MAIN ST") )
 
     db.session.add( CategoryRE("Bofa cc payment", boachk, r"BANK OF AMERICA CREDIT CARD Bill Payment") )
@@ -167,8 +222,10 @@ def create_categories():
     db.session.add( CategoryRE("Roto Rooter", hrep, r"ROTO-ROOTER") )
     db.session.add( CategoryRE("Shower head", hrep, r"GUILLENS PLUMBING") )
     db.session.add( CategoryRE("Angie's List", hrep, r"ANGIES LIST") )
-    db.session.add( CategoryRE("Furnace/AC", hrep, r"WELLS FARGO CARD DES") )
-    db.session.add( CategoryRE("Furnace/AC", hrep, r"WFFNB CREDITCARD DES") )
+    db.session.add( CategoryRE("Furnace/AC", hrep, r"WELLS FARGO CARD DES", True) )
+    db.session.add( CategoryRE("Furnace/AC", hrep, r"WFFNB CREDITCARD DES", True) )
+    db.session.add( CategoryRE("Tree removal", hrep, r"Tree Service", True) )
+    db.session.add( CategoryRE("Tree removal", hrep, r"ElecCheck 1139", True) )
 
     db.session.add( CategoryRE("John Stott", give, r"JOHN STOTT MIN") )
     db.session.add( CategoryRE("John Stott", give, r"LANGHAM PARTNERS") )
@@ -263,6 +320,7 @@ def create_categories():
     db.session.add( CategoryRE("Anyways", fogroup, '304 W  Army Trail') )
     db.session.add( CategoryRE("My Thai", fogroup, 'MY THAI') )
     db.session.add( CategoryRE("DMK", fogroup, 'DMK DMK') )
+    db.session.add( CategoryRE("DMK", fogroup, 'DMK BURGER BAR') )
     db.session.add( CategoryRE("Joy Yee", fogroup, 'JOY YEE NOODLE') )
     db.session.add( CategoryRE("Egglectic", fogroup, 'EGGLECTIC CAFE') )
     db.session.add( CategoryRE("Red Robin", fogroup, 'RED ROBIN') )
@@ -287,6 +345,10 @@ def create_categories():
     db.session.add( CategoryRE("Muldoons", fogroup, "MULDOONS") )
     db.session.add( CategoryRE("Dinicos Pizze", fogroup, "DINICO\'S") )
     db.session.add( CategoryRE("Big Bricks", fogroup, "BIG BRICKS") )
+    db.session.add( CategoryRE("The Florentine", fogroup, "THE FLORENTINE") )
+    db.session.add( CategoryRE("Devil's Lake", fogroup, "DEVIL'S LAKE") )
+    db.session.add( CategoryRE("Culvers", fogroup, "CULVER'S") )
+    db.session.add( CategoryRE("Heaven on Seven", fogroup, "HEAVEN ON SEVEN") )
 
     db.session.add( CategoryRE("Comcast", utils, 'COMCAST CHICAGO') )
     db.session.add( CategoryRE("At&t", utils, 'AT&T BILL') )
@@ -309,6 +371,7 @@ def create_categories():
     db.session.add( CategoryRE("Maint/Repair", car, 'AUTO ZONE ' ) )
     db.session.add( CategoryRE("Maint/Repair", car, 'LORDS AUTO ', True ) )
     db.session.add( CategoryRE("Maint/Repair", car, "LORD'S AUTO ", True ) )
+    db.session.add( CategoryRE("Maint/Repair", car, "US AUTO PARTS NETWORK", True ) )
     db.session.add( CategoryRE("Car Tax", car, 'INTERNET VEHICLE ' ) )
     db.session.add( CategoryRE("GE Permit", car, 'GE Car Permit' ) )
     db.session.add( CategoryRE("Parking", car, 'O\'HARE PARK MAINLOT ' ) )
@@ -367,6 +430,7 @@ def create_categories():
     db.session.add( CategoryRE("Movie Theater", movies, 'FANDANGO') )
     db.session.add( CategoryRE("Movie Theater", movies, 'CINEMARK THEAT') )
     db.session.add( CategoryRE("Movie Theater", movies, 'REGAL KINGSTOWNE') )
+    db.session.add( CategoryRE("Movie Theater", movies, 'ADDISON CINEMAS') )
     db.session.add( CategoryRE("Amazon VOD", movies, 'AMAZON VIDEO ON DEMAND') )
     db.session.add( CategoryRE("Amazon VOD", movies, 'Amazon Video On Demand') )
 
@@ -385,6 +449,7 @@ def create_categories():
     db.session.add( CategoryRE("Ravinia", group, 'RAVINIA') )
     db.session.add( CategoryRE("Bowling", group, 'CHALET LANES') )
     db.session.add( CategoryRE("FIFA 15", ent, 'PAYPAL \*MICROSOFTCO') )
+    db.session.add( CategoryRE("Kindle", amazon, 'Amazon Services-Kindle') )
 
     db.session.add( CategoryRE("TJ and Dave", group, 'TJANDDAVE') )
     db.session.add( CategoryRE("Marine Museum", group, 'NATL MUSEUM OF TRIANGLE') )
@@ -416,6 +481,7 @@ def create_categories():
     db.session.add( CategoryRE("Des Plaines Half", sports, 'RUN RACE') )
     db.session.add( CategoryRE("Running Watch", sports, 'ERICFARRELL') )
     db.session.add( CategoryRE("Bike", sports, 'ELEMENT MULTISPORT GLE') )
+    db.session.add( CategoryRE("Bike", sports, 'PRAIRIE PATH CYCLES', True) )
     db.session.add( CategoryRE("Soccer", sports, 'THE SOCCER EDGE') )
 
     db.session.add( CategoryRE("sport shoes", sports, 'RUN TODAY CORP') )

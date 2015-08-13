@@ -45,6 +45,7 @@ my %types;
 for (@entries) {
     my @entry = @$_;
     if ($entry[2] eq 'CONTRIBUTION' || $entry[2] eq 'Transfer In/Out' || $entry[2] eq 'Investment Gain (Loss)') {
+        $entry[4] =~ s/,//g;
         next if $entry[4] == 0;
 
         for my $item (@entry[5..$#entry]) {
@@ -57,6 +58,9 @@ for (@entries) {
               : $item->[0] eq '04 - MATCH V/STOCK FUND DIV' ? 'BofA Match' 
               : $item->[0] eq '20 - ANNUAL COMPANY CONTRIB' ? 'Pension' 
               : $item->[0] eq '16 - REWARDING SUCCESS PLAN' ? 'Rewarding Success' 
+              : $item->[0] eq '01 - POST 2007 COMP CREDITS' ? 'Pension Credit' 
+              : $item->[0] eq '05 - PRE-2008 COMP CREDITS'  ? 'Pension Credit' 
+              : $item->[0] eq '13 - QNEC'                   ? 'QNEC' 
               : confess "Unknown Contribution:  $item->[0]";
 
             $item->[1] =~ s/[\$,]//g;
