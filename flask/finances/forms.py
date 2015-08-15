@@ -16,6 +16,13 @@ class TransactionsForm(Form):
     enddate   = DateField('enddate', format='%Y-%m-%d', default=datetime.date.today())
     category  = SelectField('category', coerce=int)
 
+class TransactionForm(Form):
+    tdate    = DateField('tdate', format='%Y-%m-%d')
+    bdate    = DateField('bdate', format='%Y-%m-%d')
+    name     = StringField('name')
+    amount   = StringField('amount')
+    category = SelectField('category', coerce=int)
+
 class DateRangeForm(Form):
     startdate = DateField('startdate', format='%Y-%m-%d', default=datetime.date.today() - monthdelta(12))
     enddate   = DateField('enddate', format='%Y-%m-%d', default=datetime.date.today())

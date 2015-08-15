@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="/static/css/jquery.treetable.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/jquery.treetable.theme.default.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/screen.css" type="text/css" />
+{% endblock %}
+{% block navbar_budget %} class="active"{% endblock %}
+{% block content %}
+    <form action="#" method="post" name="trans">
+        {{ form.hidden_tag() }}
+        <p>Transaction Date: {{ form.tdate(size=12, class='datepicker') }}</p>
+        <p>Budget Date: {{ form.bdate(size=12, class='datepicker') }}</p>
+        <p>Category: {{ form.category() }}</p>
+        <p>Name: {{ form.name() }}</p>
+        <p>Amount: {{ form.amount() }}</p>
+        <p><input type="submit" value="Update Transaction"></p>
+    </form>
+{% endblock %}
+
