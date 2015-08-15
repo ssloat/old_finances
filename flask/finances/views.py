@@ -2,7 +2,7 @@ from flask import render_template, session, url_for
 from finances import db, app
 from finances.models.transaction import Transaction, monthly
 from finances.models.category import Category, allChildren, categoriesSelectBox
-from finances.forms import TransactionsForm, DateRangeForm
+from finances.forms import TransactionForm, TransactionsForm, DateRangeForm
 
 from finances.models import investments 
 
@@ -63,6 +63,25 @@ def transactions(): #category_id=None):
     q = q.filter(Transaction.tdate>=fr, Transaction.tdate<=to).order_by(Transaction.tdate)
 
     return render_template('transactions.html', form=form, transactions=[q])
+
+@app.route('/transaction/<transaction_id>', methods=['GET', 'POST']) 
+def transaction(transaction_id): 
+    form = TransactionForm()
+    form.category.choices = categoriesSelectBox()
+
+    if form.validate_on_submit():
+        print form.startdate.data
+        print form.enddate.data
+
+    q = db.session.query(Transaction).filter(Transaction.id==4).first()
+
+    form.tdate.data = q.tdate
+    form.bdate.data = q.bdate
+    form.name.data  = q.name
+    form.category.data = q.category_id
+    form.amount.data   = q.amount
+
+    return render_template('transaction.html', form=form)
 
 @app.route('/fundprices/<fund>', methods=['GET', 'POST']) 
 def fundprices(fund): 
