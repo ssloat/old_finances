@@ -48,7 +48,8 @@ def tritransactions(category_id, month):
 
 @app.route('/transactions', methods=['GET', 'POST']) 
 @app.route('/transactions/<category_id>', methods=['GET', 'POST']) 
-def transactions(category_id=None): 
+@app.route('/transactions/<category_id>/<name>', methods=['GET', 'POST']) 
+def transactions(category_id=None, name=None): 
     form = TransactionsForm()
     form.category.choices = categoriesSelectBox()
 
@@ -62,6 +63,9 @@ def transactions(category_id=None):
         c = db.session.query(Category).filter(Category.id==form.category.data).first()
         children = [c] + allChildren(c)
         q = q.join(Category).filter(Category.id.in_([child.id for child in children]))
+
+    if name:
+        q = q.filter(Transaction.name==name)
 
     fr = form.startdate.data
     to = form.enddate.data
@@ -81,7 +85,7 @@ def transaction(transaction_id):
         q.category_id = form.category.data
         q.amount = form.amount.data
 
-        db.session.save(q)
+        db.session.commit()
 
     else:
         form.tdate.data = q.tdate

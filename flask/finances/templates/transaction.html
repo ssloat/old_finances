@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="/static/css/jquery.treetable.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/jquery.treetable.theme.default.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/screen.css" type="text/css" />
-    <link href="/static/css/transaction.css" rel="stylesheet">
+    <link href="/static/css/transaction.css" rel="stylesheet" type="text/css" />
 {% endblock %}
 {% block navbar_budget %} class="active"{% endblock %}
 {% block content %}
@@ -14,7 +14,7 @@
             <tr><td>Budget Date:</td><td>{{ form.bdate(size=12, onchange='$("input[type=submit]").removeAttr("disabled");', class='datepicker') }}</td></tr>
             <tr><td>Category:</td><td>{{ form.category(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
             <tr><td>Name:</td><td>{{ form.name(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
-            <tr><td>Amount:</td><td>{{ form.amount(disabled=True) }}</td></tr>
+            <tr><td>Amount:</td><td>{{ form.amount(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
             <tr><td/><td><input type="submit" value="Update Transaction" disabled="disabled"></td></tr>
         </table>
     </form>

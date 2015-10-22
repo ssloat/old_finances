@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block head %}<link href="/static/css/transaction.css" rel="stylesheet">{% endblock %}
+{% block head %}<link href="/static/css/transaction.css" rel="stylesheet" type="text/css"/>{% endblock %}
 {% block navbar_transactions %} class="active"{% endblock %}
 {% block content %}
     {% if form %}
@@ -18,7 +18,7 @@
                 {% for t in table %}
                 <tr>
                     <td><a href="/transaction/{{t.id}}">{{ t.bdate }}</a></td> 
-                    <td>{{ t.name }}</td> 
+                    <td><a href="/transactions/{{ t.category.id }}/{{ t.name }}">{{ t.name }}</a></td> 
                     <td><a href="/transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
                     <td align="right">{{ t.amount }}</td> 
                 {% endfor %}
