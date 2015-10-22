@@ -295,6 +295,7 @@ def create_category_res():
     db.session.add( CategoryRE("135 Cafe", fosolo, "VAULT") )
     db.session.add( CategoryRE("135 Cafe", fosolo, "VAULT 5019123") )
     db.session.add( CategoryRE("135 Cafe", fosolo, "VAULT +40063489") )
+    db.session.add( CategoryRE("135 Cafe", fosolo, "LASALLE CAFE") )
     db.session.add( CategoryRE("Culvers", fosolo, "CULVERS") )
     db.session.add( CategoryRE("Zoup Soup", fosolo, "ZOUP\] ADAMS") )
     db.session.add( CategoryRE("That Burger Joint", fosolo, "THAT BURGER") )
@@ -349,6 +350,7 @@ def create_category_res():
     db.session.add( CategoryRE("Devil's Lake", fogroup, "DEVIL'S LAKE") )
     db.session.add( CategoryRE("Culvers", fogroup, "CULVER'S") )
     db.session.add( CategoryRE("Heaven on Seven", fogroup, "HEAVEN ON SEVEN") )
+    db.session.add( CategoryRE("Warrens", fogroup, "Warrens Ale House") )
 
     db.session.add( CategoryRE("Comcast", utils, 'COMCAST CHICAGO') )
     db.session.add( CategoryRE("At&t", utils, 'AT&T BILL') )
@@ -373,6 +375,7 @@ def create_category_res():
     db.session.add( CategoryRE("Maint/Repair", car, "LORD'S AUTO ", True ) )
     db.session.add( CategoryRE("Maint/Repair", car, "US AUTO PARTS NETWORK", True ) )
     db.session.add( CategoryRE("Car Tax", car, 'INTERNET VEHICLE ' ) )
+    db.session.add( CategoryRE("Car Tax", car, 'IL WEB PLATE RENEWAL ' ) )
     db.session.add( CategoryRE("GE Permit", car, 'GE Car Permit' ) )
     db.session.add( CategoryRE("Parking", car, 'O\'HARE PARK MAINLOT ' ) )
     db.session.add( CategoryRE("Parking", car, 'PARKING METER ' ) )
@@ -431,6 +434,7 @@ def create_category_res():
     db.session.add( CategoryRE("Movie Theater", movies, 'CINEMARK THEAT') )
     db.session.add( CategoryRE("Movie Theater", movies, 'REGAL KINGSTOWNE') )
     db.session.add( CategoryRE("Movie Theater", movies, 'ADDISON CINEMAS') )
+    db.session.add( CategoryRE("Movie Theater", movies, 'PICTURE SHOW') )
     db.session.add( CategoryRE("Amazon VOD", movies, 'AMAZON VIDEO ON DEMAND') )
     db.session.add( CategoryRE("Amazon VOD", movies, 'Amazon Video On Demand') )
 
@@ -440,6 +444,7 @@ def create_category_res():
     db.session.add( CategoryRE("Amazon", amazon, 'AMAZON DIGITAL') )
     db.session.add( CategoryRE("Amazon", amazon, 'AMAZON MKTPLACE') )
     db.session.add( CategoryRE("Amazon Prime", ent, 'AMAZONPRIME') )
+    db.session.add( CategoryRE("Amazon Prime", ent, 'AmazonPrime Membership') )
     db.session.add( CategoryRE("Newegg", ent, 'NEWEGG.COM') )
     db.session.add( CategoryRE("Best Buy", ent, 'BEST BUY CO') )
     db.session.add( CategoryRE("Groupon", ent, 'GROUPON INC') )
@@ -448,6 +453,7 @@ def create_category_res():
     db.session.add( CategoryRE("ESPN Insider", ent, 'ESPN') )
     db.session.add( CategoryRE("Ravinia", group, 'RAVINIA') )
     db.session.add( CategoryRE("Bowling", group, 'CHALET LANES') )
+    db.session.add( CategoryRE("Cubs", group, '2WRIGLEY FIELD') )
     db.session.add( CategoryRE("FIFA 15", ent, 'PAYPAL \*MICROSOFTCO') )
     db.session.add( CategoryRE("Kindle", amazon, 'Amazon Services-Kindle') )
 

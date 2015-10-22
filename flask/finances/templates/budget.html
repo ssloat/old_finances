@@ -25,13 +25,13 @@
     <tbody>
     {% for row in table.rows %}
         <tr data-tt-id="{{row.category.id}}" {% if row.category.parent %} data-tt-parent-id="{{row.category.parent.id}}" {% endif %}>
-            <td class="nowrap">{{row.category.name}}</td>
+            <td class="nowrap"><a href="transactions/{{row.category.id}}">{{row.category.name}}</a></td>
             <td align="right">{{row.average}}</td>
             {% for item in row.data %}
-            <td align="right"><a href="tritransactions/{{row.category.id}}/{{item[1]}}">{{item[0]}}</td>
+            <td align="right"><a href="tritransactions/{{row.category.id}}/{{item[1]}}">{{item[0]|comma}}</a></td>
             {% endfor %}
-            <td align="right">{{row.yearly}}</td>
-            <td align="right">{{row.total}}</td>
+            <td align="right">{{row.yearly|comma}}</td>
+            <td align="right">{{row.total|comma}}</td>
         </tr>
     {% endfor %}
     </tbody>

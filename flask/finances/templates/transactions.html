@@ -7,7 +7,7 @@
         <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()', class='datepicker') }}
         End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}
         Category: {{ form.category(onchange='this.form.submit()') }}
-        <input type="submit" value="Get Trans"></p>
+        <!--<input type="submit" value="Get Trans"></p>-->
     </form>
     {% endif %}
     <table>
@@ -16,9 +16,9 @@
             <td valign="top"><table>
                 {% for t in table %}
                 <tr>
-                    <td>{{ t.tdate }}</td> 
+                    <td><a href="/transaction/{{t.id}}">{{ t.bdate }}</a></td> 
                     <td>{{ t.name }}</td> 
-                    <td><a href="transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
+                    <td><a href="/transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
                     <td align="right">{{ t.amount }}</td> 
                 {% endfor %}
                 </tr>

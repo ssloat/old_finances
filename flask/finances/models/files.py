@@ -57,8 +57,8 @@ def _chkTransCsv(line, year, month):
 
     return float(amt), dt, des
 
-def bofaCheckingTxt(filename, year, month):
-    _readFile(filename, 'BOA Checking', _chkTransTxt, year, month)
+def bofaCheckingTxt(filename, year, month, start=None, end=None):
+    _readFile(filename, 'BOA Checking', _chkTransTxt, year, month, start, end)
 
 def _chkTransTxt(line, year, month):
     if not re.match('^\d\d/\d\d/\d\d\d\d ', line):
@@ -92,7 +92,10 @@ def _usaa(line, year, month):
     return float(amt), datetime.date(y, m, d), des
 
 
-def _readFile(filename, acc_name, parser, year, month):
+def _readFile(filename, acc_name, parser, year, month, start=None, end=None):
+    start = start or datetime.date(1980, 1, 1)
+    end = end or datetime.date(2100, 1, 1)
+
     uncat = db.session.query(Category).filter_by(name='uncategorized').first()
     res = db.session.query(CategoryRE).all()
     print "read " + filename
@@ -102,7 +105,7 @@ def _readFile(filename, acc_name, parser, year, month):
     with open(filename, 'r') as f:
         for line in f:
             amt, dt, des = parser(line, year, month)
-            if not amt:
+            if not amt or dt < start or dt > end:
                 continue
 
             yearly = None

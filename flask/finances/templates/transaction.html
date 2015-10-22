@@ -8,12 +8,14 @@
 {% block content %}
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
-        <p>Transaction Date: {{ form.tdate(size=12, class='datepicker') }}</p>
-        <p>Budget Date: {{ form.bdate(size=12, class='datepicker') }}</p>
-        <p>Category: {{ form.category() }}</p>
-        <p>Name: {{ form.name() }}</p>
-        <p>Amount: {{ form.amount() }}</p>
-        <p><input type="submit" value="Update Transaction"></p>
+        <table>
+            <tr><td>Transaction Date:</td><td>{{ form.tdate(size=12, class='datepicker', disabled=True) }}</td></tr>
+            <tr><td>Budget Date:</td><td>{{ form.bdate(size=12, class='datepicker') }}</td></tr>
+            <tr><td>Category:</td><td>{{ form.category() }}</td></tr>
+            <tr><td>Name:</td><td>{{ form.name() }}</td></tr>
+            <tr><td>Amount:</td><td>{{ form.amount() }}</td></tr>
+            <tr><td/><td><input type="submit" value="Update Transaction"></td></tr>
+        </table>
     </form>
 {% endblock %}
 

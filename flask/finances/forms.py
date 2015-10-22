@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField, DateField, SelectField
+from wtforms import StringField, BooleanField, DateField, SelectField, DecimalField
 from wtforms.validators import DataRequired
 import datetime
 from monthdelta import monthdelta
@@ -20,7 +20,7 @@ class TransactionForm(Form):
     tdate    = DateField('tdate', format='%Y-%m-%d')
     bdate    = DateField('bdate', format='%Y-%m-%d')
     name     = StringField('name')
-    amount   = StringField('amount')
+    amount   = DecimalField('amount')
     category = SelectField('category', coerce=int)
 
 class DateRangeForm(Form):

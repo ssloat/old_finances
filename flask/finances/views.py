@@ -13,6 +13,9 @@ from monthdelta import monthdelta
 def money_filter(s):
     return "${:,.2f}".format(s)
 
+@app.template_filter('comma')
+def comma_filter(s):
+    return "{:,.2f}".format(s)
 
 
 
@@ -34,9 +37,9 @@ def tritransactions(category_id, month):
     for _ in range(3):
         tables.append( db.session.query(Transaction).join(Category)\
                 .filter(Category.id.in_(cat_ids),
-                    Transaction.tdate>=date, 
-                    Transaction.tdate<date + monthdelta(1),
-                ).order_by(Transaction.tdate).all()
+                    Transaction.bdate>=date, 
+                    Transaction.bdate<date + monthdelta(1),
+                ).order_by(Transaction.bdate).all()
         )
 
         date += monthdelta(1)
@@ -44,23 +47,25 @@ def tritransactions(category_id, month):
     return render_template('transactions.html', form=None, transactions=tables)
 
 @app.route('/transactions', methods=['GET', 'POST']) 
-#@app.route('/transactions/<category_id>', methods=['GET', 'POST']) 
-def transactions(): #category_id=None): 
+@app.route('/transactions/<category_id>', methods=['GET', 'POST']) 
+def transactions(category_id=None): 
     form = TransactionsForm()
     form.category.choices = categoriesSelectBox()
 
     if form.validate_on_submit():
-        print form.startdate.data
-        print form.enddate.data
+        category_id = form.category.data
+    elif category_id:
+        form.category.data = int(category_id)
 
     q = db.session.query(Transaction)
     if form.category.data:
         c = db.session.query(Category).filter(Category.id==form.category.data).first()
-        q = q.join(Category).filter(Category.id.in_(allChildren(c)))
+        children = [c] + allChildren(c)
+        q = q.join(Category).filter(Category.id.in_([child.id for child in children]))
 
     fr = form.startdate.data
     to = form.enddate.data
-    q = q.filter(Transaction.tdate>=fr, Transaction.tdate<=to).order_by(Transaction.tdate)
+    q = q.filter(Transaction.bdate>=fr, Transaction.bdate<=to).order_by(Transaction.bdate)
 
     return render_template('transactions.html', form=form, transactions=[q])
 
@@ -69,17 +74,21 @@ def transaction(transaction_id):
     form = TransactionForm()
     form.category.choices = categoriesSelectBox()
 
+    q = db.session.query(Transaction).filter(Transaction.id==int(transaction_id)).first()
     if form.validate_on_submit():
-        print form.startdate.data
-        print form.enddate.data
+        q.bdate = form.bdate.data
+        q.name = form.name.data
+        q.category_id = form.category.data
+        q.amount = form.amount.data
 
-    q = db.session.query(Transaction).filter(Transaction.id==4).first()
+        db.session.save(q)
 
-    form.tdate.data = q.tdate
-    form.bdate.data = q.bdate
-    form.name.data  = q.name
-    form.category.data = q.category_id
-    form.amount.data   = q.amount
+    else:
+        form.tdate.data = q.tdate
+        form.bdate.data = q.bdate
+        form.name.data  = q.name
+        form.category.data = q.category_id
+        form.amount.data   = q.amount
 
     return render_template('transaction.html', form=form)
 
