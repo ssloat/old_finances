@@ -6,8 +6,8 @@
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
         <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()', class='datepicker') }}
-        End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}
-        Category: {{ form.category(onchange='this.form.submit()') }}
+        End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}</p>
+        <p>Category: {{ form.category(onchange='this.form.submit()') }}</p>
         <!--<input type="submit" value="Get Trans"></p>-->
     </form>
     {% endif %}
@@ -17,9 +17,9 @@
             <td valign="top"><table>
                 {% for t in table %}
                 <tr>
-                    <td><a href="/transaction/{{t.id}}">{{ t.bdate }}</a></td> 
-                    <td><a href="/transactions/{{ t.category.id }}/{{ t.name }}">{{ t.name }}</a></td> 
-                    <td><a href="/transactions/{{ t.category.id }}">{{ t.category.name }}</a></td>
+                    <td><a href="{{url_for('transaction', transaction_id=t.id)}}">{{ t.bdate }}</a></td> 
+                    <td><a href="{{url_for('transactions', category_id=t.category.id, name=t.name|urlencode)}}">{{ t.name }}</a></td> 
+                    <td><a href="{{url_for('transactions', category_id=t.category.id)}}">{{ t.category.name }}</a></td>
                     <td align="right">{{ t.amount }}</td> 
                 {% endfor %}
                 </tr>

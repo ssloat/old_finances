@@ -1,4 +1,5 @@
-from flask import render_template, session, url_for
+from flask import render_template, session, request
+
 from finances import db, app
 from finances.models.transaction import Transaction, monthly
 from finances.models.category import Category, allChildren, categoriesSelectBox
@@ -8,6 +9,8 @@ from finances.models import investments
 
 import datetime
 from monthdelta import monthdelta
+from urllib import unquote
+from sqlalchemy import desc
 
 @app.template_filter('money')
 def money_filter(s):
@@ -65,20 +68,21 @@ def transactions(category_id=None, name=None):
         q = q.join(Category).filter(Category.id.in_([child.id for child in children]))
 
     if name:
+        name = unquote(name)
         q = q.filter(Transaction.name==name)
 
     fr = form.startdate.data
     to = form.enddate.data
-    q = q.filter(Transaction.bdate>=fr, Transaction.bdate<=to).order_by(Transaction.bdate)
+    q = q.filter(Transaction.bdate>=fr, Transaction.bdate<=to).order_by(desc(Transaction.bdate))
 
     return render_template('transactions.html', form=form, transactions=[q])
 
-@app.route('/transaction/<transaction_id>', methods=['GET', 'POST']) 
+@app.route('/transaction/<int:transaction_id>', methods=['GET', 'POST']) 
 def transaction(transaction_id): 
     form = TransactionForm()
     form.category.choices = categoriesSelectBox()
 
-    q = db.session.query(Transaction).filter(Transaction.id==int(transaction_id)).first()
+    q = db.session.query(Transaction).filter(Transaction.id==transaction_id).first()
     if form.validate_on_submit():
         q.bdate = form.bdate.data
         q.name = form.name.data
