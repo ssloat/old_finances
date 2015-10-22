@@ -512,5 +512,5 @@ def create_category_res():
 
     db.session.add( CategoryRE("Old Navy", clothes, 'OLD NAVY') )
     db.session.add( CategoryRE("Jos A Bank", clothes, 'JOSABANK') )
-    db.session.add( CategoryRE("Kohls", clothes, "KOHL'S) )
+    db.session.add( CategoryRE("Kohls", clothes, "KOHL'S") )
 
