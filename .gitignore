@@ -2,3 +2,16 @@ files
 *.pyc
 *.swp
 *.db
+flask/finances/static/js
+flask/finances/static/fonts
+flask/finances/static/images
+flask/finances/static/css/navbar.css
+flask/finances/static/css/bootstrap-theme.min.css
+flask/finances/static/css/bootstrap.min.css
+flask/finances/static/css/bootstrap.css.map
+flask/finances/static/css/screen.css
+flask/finances/static/css/bootstrap-theme.css.map
+flask/finances/static/css/jquery.treetable.css
+flask/finances/static/css/bootstrap-theme.css
+flask/finances/static/css/jquery.treetable.theme.default.css
+flask/finances/static/css/bootstrap.css
