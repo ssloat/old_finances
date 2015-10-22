@@ -10,11 +10,11 @@
         {{ form.hidden_tag() }}
         <table>
             <tr><td>Transaction Date:</td><td>{{ form.tdate(size=12, class='datepicker', disabled=True) }}</td></tr>
-            <tr><td>Budget Date:</td><td>{{ form.bdate(size=12, class='datepicker') }}</td></tr>
-            <tr><td>Category:</td><td>{{ form.category() }}</td></tr>
-            <tr><td>Name:</td><td>{{ form.name() }}</td></tr>
-            <tr><td>Amount:</td><td>{{ form.amount() }}</td></tr>
-            <tr><td/><td><input type="submit" value="Update Transaction"></td></tr>
+            <tr><td>Budget Date:</td><td>{{ form.bdate(size=12, onchange='$("input[type=submit]").removeAttr("disabled");', class='datepicker') }}</td></tr>
+            <tr><td>Category:</td><td>{{ form.category(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
+            <tr><td>Name:</td><td>{{ form.name(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
+            <tr><td>Amount:</td><td>{{ form.amount(disabled=True) }}</td></tr>
+            <tr><td/><td><input type="submit" value="Update Transaction" disabled="disabled"></td></tr>
         </table>
     </form>
 {% endblock %}
