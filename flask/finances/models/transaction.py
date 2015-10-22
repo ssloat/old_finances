@@ -109,7 +109,7 @@ def monthly(from_date, to_date):
     catids = dict([(c.id, c.name) for c in cats])
     keys = [m.strftime('%Y-%m') for m in months]
     ts = db.session.query(Transaction)\
-        .filter(Transaction.tdate>=from_date, Transaction.tdate<to_date)
+        .filter(Transaction.bdate>=from_date, Transaction.bdate<to_date)
 
     cat_keys = {} 
     results = {}
@@ -128,7 +128,7 @@ def monthly(from_date, to_date):
             if t.yearly:
                 results[cid]['yearly'].append(t.amount) 
             else:
-                results[cid][t.tdate.strftime('%Y-%m')].append(t.amount) 
+                results[cid][t.bdate.strftime('%Y-%m')].append(t.amount) 
 
     table = {'headings': ['category', 'average'] + keys[::-1] + ['yearly', 'total'], 'rows': []}
     top = db.session.query(Category).filter(Category.name=='transactions').first()
