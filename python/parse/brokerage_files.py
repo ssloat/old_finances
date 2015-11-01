@@ -1,4 +1,5 @@
 import datetime
+import string
 import re
 
 def parse_date(s):
@@ -115,4 +116,23 @@ if __name__ == '__main__':
 
             print ",".join(v)
 
+    with open('../files/vanguard.txt') as f:
+        for line in f.read().splitlines():
+            line = line.replace(',', '')
+
+            date, fund, action, shares, price, amount = [string.rstrip(x) for x in line.split('\t')]
+            mm, dd, yyyy = date.split('/')
+            date = '-'.join([yyyy, mm, dd])
+
+            shares = float(shares)
+            price = float(price[1:])
+            amount = float(amount[1:])
+
+            if action == 'Buy':
+                action = 'Purchase'
+                amount = -1*amount
+            elif action == 'Dividend':
+                action = 'Divd Reinv'
+
+            print ",".join([date, 'BROKERAGE', fund, str(shares), str(amount), str(price), action])
 
