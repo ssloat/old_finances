@@ -21,11 +21,20 @@ class Transaction(db.Model):
     def __init__(self, tdate, name, category, amount, trans_file, bdate=None, yearly=False):
         self.tdate      = tdate
         self.name       = name
-        self.category   = category
         self.amount     = amount
-        self.trans_file = trans_file
         self.bdate      = bdate or self.tdate
         self.yearly     = yearly
+
+        if isinstance(category, int):
+            self.category_id = category
+        else:
+            self.category = category
+
+        if isinstance(trans_file, int):
+            self.file_id = trans_file
+        else:
+            self.trans_file = trans_file
+
 
     def __repr__(self):
        return "<Tran('%d, %s, %s, %s, %s, %s, %s')>" % ((self.id or 0), self.tdate, self.name,
@@ -63,7 +72,7 @@ def bac_mortgage(date, amt, trans_file):
 AMTS = None
 
 def bofa(tdate, amt, trans_file):
-    cats = [ ('bofa income', 'Bofa'), ('journal', '401k'),
+    cats = [ ('bofa income', 'Bofa'), ('401k', '401k contrib'),
             ('inc taxes', 'Fed Taxes'), ('inc taxes', 'IL Taxes'), 
             ('inc taxes', 'Soc Sec'), ('inc taxes', 'Medicaid'),
             ('preTax', 'medical'), ('preTax', 'dental'),
