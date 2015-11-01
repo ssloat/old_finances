@@ -71,13 +71,12 @@ class Portfolio(object):
 
 
 def portfolio(start, end):
-    start = start + monthdelta.monthdelta(1) - datetime.timedelta(days=start.day-1)
-    end = end - datetime.timedelta(days=end.day-1)
-
     dates = []
-    while start <= end:
-        dates.append(start - datetime.timedelta(days=1))
-        start = start + monthdelta.monthdelta(1)
+    while end > start:
+        dates.append(end)
+
+        end = end.replace(day=1)
+        end = end - datetime.timedelta(days=1)
 
     p = Portfolio()
     p.add_401k()
@@ -90,10 +89,10 @@ def portfolio(start, end):
         for fund in sorted(p.entries[acc].keys()):
             data = [x[-1] for x in p.historical_values(acc, fund, dates)]
             if [x for x in data if x != 0.0]:
-                acc_results.append({'name': fund, 'data': data, 'parent': acc})
+                acc_results.append({'name': fund, 'data': data, 'parent': acc.capitalize()})
 
         data = [sum(x) for x in zip(*[y['data'] for y in acc_results])]
-        heading = {'name': acc, 'parent': 'top', 'data': data}
+        heading = {'name': acc.capitalize(), 'parent': 'top', 'data': data}
         results['rows'].extend([heading] + acc_results)
 
     return results
@@ -103,6 +102,6 @@ def fundprices(fund, start, end):
         Stock.name==fund, StockPrice.date>=start, StockPrice.date<=end
     ).order_by(db.desc(StockPrice.date))
 
-    return [{'date': str(p.date), 'price': p.close} for p in prices]
+    return [{'date': p.date, 'price': p.close} for p in prices]
 
   
