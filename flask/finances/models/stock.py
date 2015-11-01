@@ -56,6 +56,7 @@ def load_prices(start, end):
             'TWCGX', 'VGTSX', 'VFINX',
             'VGSIX', 'VIPSX', 'FMKIX', 'FNMIX', 'BMBSX', 'VWAHX', 'PPUDX', 'PRDSX', 'VEIPX', 'VEXAX',
             'VIIIX', 'VEMPX', 'VIPIX', 'PTTRX', 
+            'VOO',
     ]
     # MFS, Stable capital, Int Crdt
 
