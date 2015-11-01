@@ -15,8 +15,10 @@
             <tr><td>Category:</td><td>{{ form.category(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
             <tr><td>Name:</td><td>{{ form.name(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
             <tr><td>Amount:</td><td>{{ form.amount(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
+            <tr><td>Yearly:</td><td>{{ form.yearly(onchange='$("input[type=submit]").removeAttr("disabled");') }}</td></tr>
             <tr><td/><td><input type="submit" value="Update Transaction" disabled="disabled"></td></tr>
         </table>
     </form>
+    <p><a href={{url_for('split_transaction', transaction_id=transaction_id)}}>Split</a></p>
 {% endblock %}
 

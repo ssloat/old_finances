@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block head %}
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1.1', {'packages':['line']});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Day');
+        {% for key in keys %}
+        data.addColumn('number', '{{key}}');
+        {% endfor %}
+        data.addRows([
+            {% for row in prices %}
+            [{% for x in row %}{{x if x else 'null'}},{% endfor %}],
+            {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {
+            'chart': {
+                'title':'How Much Pizza I Ate Last Night', 
+            },
+            'width':900, 
+            'height':500,
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.charts.Line(document.getElementById('linechart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
+{% block navbar_transactions %} class="active"{% endblock %}
+{% block content %}
+    {% if prices %}
+    <div id="linechart_div"></div>
+    {% endif %}
+{% endblock %}
+
+

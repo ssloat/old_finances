@@ -21,6 +21,7 @@
                     <td><a href="{{url_for('transactions', category_id=t.category.id, name=t.name|urlencode)}}">{{ t.name }}</a></td> 
                     <td><a href="{{url_for('transactions', category_id=t.category.id)}}">{{ t.category.name }}</a></td>
                     <td align="right">{{ t.amount }}</td> 
+                    <td><input type="checkbox"{% if t.yearly %} checked{% endif %}></td>
                 {% endfor %}
                 </tr>
             </table></td>

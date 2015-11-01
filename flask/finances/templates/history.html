@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block head %}<link href="/static/css/transaction.css" rel="stylesheet" type="text/css"/>{% endblock %}
+{% block navbar_transactions %} class="active"{% endblock %}
+{% block content %}
+    <table>
+        {% for row in table %}
+        <tr>
+            {% for item in row %}
+            <td>{{ item }}</td> 
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
