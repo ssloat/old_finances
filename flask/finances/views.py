@@ -58,15 +58,17 @@ def transactions(category_id=None, name=None):
     form = TransactionsForm()
     form.category.choices = categoriesSelectBox()
 
+    if form.validate_on_submit():
+        category_id = form.category.data
+        session['startdate'] = str(form.startdate.data)
+        session['enddate'] = str(form.enddate.data)
+    elif category_id:
+        form.category.data = category_id
+
     if 'startdate' in session:
         form.startdate.data = datetime.date(*map(int, session['startdate'].split('-')))
     if 'enddate' in session:
         form.enddate.data = datetime.date(*map(int, session['enddate'].split('-')))
-
-    if form.validate_on_submit():
-        category_id = form.category.data
-    elif category_id:
-        form.category.data = category_id
 
     q = db.session.query(Transaction)
     if form.category.data:
@@ -83,7 +85,18 @@ def transactions(category_id=None, name=None):
         Transaction.bdate<=form.enddate.data,
     ).order_by(desc(Transaction.bdate))
 
-    return render_template('transactions.html', form=form, transactions=[q])
+    graph = collections.defaultdict(float)
+    for tran in q:
+        if not tran.yearly:
+            graph[tran.bdate.replace(day=1)] += tran.amount
+
+    return render_template(
+        'transactions.html', 
+        form=form, 
+        transactions=[q], 
+        title='Transactions',
+        graph=collections.OrderedDict([(k, abs(v)) for k, v in sorted(graph.items())]),
+    )
 
 @app.route('/transaction/<int:transaction_id>', methods=['GET', 'POST']) 
 def transaction(transaction_id): 
@@ -110,7 +123,7 @@ def transaction(transaction_id):
         form.amount.data = q.amount
         form.yearly.data = q.yearly
 
-    return render_template('transaction.html', form=form, transaction_id=transaction_id)
+    return render_template('transaction.html', form=form, transaction_id=transaction_id, title='Transaction')
 
 
 @app.route('/split_transaction/<int:transaction_id>', methods=['GET', 'POST']) 
@@ -147,7 +160,7 @@ def split_transaction(transaction_id):
 
         form.bdate_2.data = q.bdate
 
-    return render_template('split_transaction.html', form=form)
+    return render_template('split_transaction.html', form=form, title='Split Transaction')
 
 @app.route('/fundprices/<fund>', methods=['GET', 'POST']) 
 def fundprices(fund): 
@@ -189,25 +202,25 @@ def year_returns(fund):
 def budget(): #category_id=None): 
     form = DateRangeForm()
 
+    if form.validate_on_submit():
+        session['startdate'] = str(form.startdate.data)
+        session['enddate'] = str(form.enddate.data)
+
     if 'startdate' in session:
         form.startdate.data = datetime.date(*map(int, session['startdate'].split('-')))
     if 'enddate' in session:
         form.enddate.data = datetime.date(*map(int, session['enddate'].split('-')))
  
-    if form.validate_on_submit():
-        session['startdate'] = str(form.startdate.data)
-        session['enddate'] = str(form.enddate.data)
-
     table = monthly(form.startdate.data, form.enddate.data)
 
-    return render_template('budget.html', form=form, table=table)
+    return render_template('budget.html', form=form, table=table, title='Budget')
 
 @app.route('/portfolio', methods=['GET', 'POST']) 
 def portfolio():
     form = DateRangeForm()
     table = investments.portfolio(form.startdate.data, form.enddate.data)
 
-    return render_template('portfolio.html', form=form, table=table)
+    return render_template('portfolio.html', form=form, table=table, title='Portfolio')
 
 @app.route('/history/<fund>')
 def history(fund):
