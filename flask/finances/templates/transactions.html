@@ -1,13 +1,43 @@
 {% extends "base.html" %}
-{% block head %}<link href="/static/css/transaction.css" rel="stylesheet" type="text/css"/>{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="/static/css/jquery.treetable.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/jquery.treetable.theme.default.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/screen.css" type="text/css" />
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1.1', {'packages':['line']});
+      google.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'Amount');
+        data.addRows([
+            {% for k, v in graph.items() %}
+            [new Date({{ k.year }}, {{ k.month-1 }}, 1), {{ v }}],
+            {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = { 'width':900, 'height':500 };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.charts.Line(document.getElementById('linechart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
 {% block navbar_transactions %} class="active"{% endblock %}
 {% block content %}
+    <div id="linechart_div"></div>
     {% if form %}
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
+        <p>Category: {{ form.category(onchange='this.form.submit()') }}</p>
         <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()', class='datepicker') }}
         End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}</p>
-        <p>Category: {{ form.category(onchange='this.form.submit()') }}</p>
         <!--<input type="submit" value="Get Trans"></p>-->
     </form>
     {% endif %}
