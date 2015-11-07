@@ -124,6 +124,11 @@ def _readFile(filename, acc_name, parser, year, month, start=None, end=None):
             elif re.match("BANK OF AMERICA DES:PAYROLL", des):
                 finances.models.transaction.bofa(dt, amt, trans_file)
 
+            elif re.match('USAA P&C', des):
+                car = -40.99
+                db.session.add( Transaction(dt, 'Car Insurance', 20, car, trans_file) )
+                db.session.add( Transaction(dt, 'House Insurance', 18, amt-car, trans_file) )
+
             else:
                 for r in res:
                     if re.search(r.pattern, des):

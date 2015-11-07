@@ -157,7 +157,6 @@ def create_category_res():
     mort_prin = db.session.query(Category).filter_by(name='mortgage prin').first()
     htax      = db.session.query(Category).filter_by(name='property tax').first()
     hrep      = db.session.query(Category).filter_by(name='house maint').first()
-    utils     = db.session.query(Category).filter_by(name='house utilities').first()
     h_ins     = db.session.query(Category).filter_by(name='house insurance').first()
 
     budget   = db.session.query(Category).filter_by(name='budget').first()
@@ -371,14 +370,20 @@ def create_category_res():
     db.session.add( CategoryRE("Heaven on Seven", fogroup, "HEAVEN ON SEVEN") )
     db.session.add( CategoryRE("Warrens", fogroup, "Warrens Ale House") )
 
-    db.session.add( CategoryRE("Comcast", utils, 'COMCAST CHICAGO') )
-    db.session.add( CategoryRE("At&t", utils, 'AT&T BILL') )
-    db.session.add( CategoryRE("At&t", utils, 'ATT[* ]BILL PAYMENT') )
-    db.session.add( CategoryRE("DirecTv", utils, 'DIRECTV SERVICE') )
-    db.session.add( CategoryRE("Nicor", utils, 'NORTHERN ILL') )
-    db.session.add( CategoryRE("Nicor", utils, 'Nicor Gas') )
-    db.session.add( CategoryRE("ComEd", utils, 'COMED DES:') )
-    db.session.add( CategoryRE("Water", utils, 'VILLAGE OF GLEN') )
+    utils = db.session.query(Category).filter_by(name='house utilities').first()
+    tv = db.session.query(Category).filter(Category.name=='internet/tv').first()
+    gas = db.session.query(Category).filter(Category.name=='gas').first()
+    elec = db.session.query(Category).filter(Category.name=='electricity').first()
+    water = db.session.query(Category).filter(Category.name=='water').first()
+
+    db.session.add( CategoryRE("Comcast", tv, 'COMCAST CHICAGO') )
+    db.session.add( CategoryRE("At&t", tv, 'AT&T BILL') )
+    db.session.add( CategoryRE("At&t", tv, 'ATT[* ]BILL PAYMENT') )
+    db.session.add( CategoryRE("DirecTv", tv, 'DIRECTV SERVICE') )
+    db.session.add( CategoryRE("Nicor", gas, 'NORTHERN ILL') )
+    db.session.add( CategoryRE("Nicor", gas, 'Nicor Gas') )
+    db.session.add( CategoryRE("ComEd", elec, 'COMED DES:') )
+    db.session.add( CategoryRE("Water", water, 'VILLAGE OF GLEN') )
 
     db.session.add( CategoryRE("Gas", car, 'SHELL OIL') )
     db.session.add( CategoryRE("Gas", car, 'EXXONMOBIL') )
@@ -412,7 +417,8 @@ def create_category_res():
     db.session.add( CategoryRE("Netflix", monthly, 'NETFLIX') )
     db.session.add( CategoryRE("Hand & Stone", monthly, 'HAND & STONE MASSAGE') )
     db.session.add( CategoryRE("Hand & Stone", monthly, 'HAND AND STONE MASSAGE') )
-    db.session.add( CategoryRE("Car Insurance", monthly, 'USAA P&C' ) )
+
+    #db.session.add( CategoryRE("Car Insurance", monthly, 'USAA P&C' ) )
 
 
     db.session.add( CategoryRE("Plane Ticket", travel, 'UNITED A ', True) )
