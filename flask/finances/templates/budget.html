@@ -4,17 +4,21 @@
     <!-- treetable ajax persist https://github.com/jughead/jquery-treetable-ajax-persist -->
     <link rel="stylesheet" href="/static/css/jquery.treetable.css" type="text/css" />
     <link rel="stylesheet" href="/static/css/jquery.treetable.theme.default.css" type="text/css" />
-    <link rel="stylesheet" href="/static/css/screen.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/screen.css" type="text/css" /> 
 {% endblock %}
 {% block navbar_budget %} class="active"{% endblock %}
 {% block content %}
+    <div class="container">
     <form action="#" method="post" name="trans">
         {{ form.hidden_tag() }}
         <p>Start Date: {{ form.startdate(size=12, onchange='this.form.submit()', class='datepicker') }}
         End Date: {{ form.enddate(size=12, onchange='this.form.submit()', class='datepicker') }}
         <input type="submit" value="Get Trans"></p>
     </form>
-    <table id="budget-table">
+    </div>
+
+    <div class="table-responsive">
+    <table id="budget-table" class="table">
     <thead>
         <tr>
             {% for item in table.headings %}
@@ -25,7 +29,7 @@
     <tbody>
     {% for row in table.rows %}
         <tr data-tt-id="{{row.category.id}}" {% if row.category.parent %} data-tt-parent-id="{{row.category.parent.id}}" {% endif %}>
-            <td class="nowrap"><a href="transactions/{{row.category.id}}">{{row.category.name}}</a></td>
+            <td style="white-space: nowrap"><a href="transactions/{{row.category.id}}">{{row.category.name}}</a></td>
             <td align="right">{{row.average}}</td>
             {% for item in row.data %}
             <td align="right"><a href="tritransactions/{{row.category.id}}/{{item[1]}}">{{item[0]|comma}}</a></td>
@@ -36,6 +40,7 @@
     {% endfor %}
     </tbody>
     </table>
+    </div>
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/jquery.treetable-ajax-persist.js"></script>

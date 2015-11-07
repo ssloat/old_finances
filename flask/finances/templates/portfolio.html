@@ -25,7 +25,7 @@
     <tbody>
     {% for row in table.rows %}
         <tr data-tt-id="{{row.name}}" {% if row.parent %} data-tt-parent-id="{{row.parent}}" {% endif %}>
-            <td class="nowrap"><a href="fundprices/{{ row.name }}">{{row.name}}</a></td>
+            <td style="white-space: nowrap"><a href="fundprices/{{ row.name }}">{{row.name}}</a></td>
             {% for v in row.data %}
             <td>{{v|money}}</td>
             {% endfor %}

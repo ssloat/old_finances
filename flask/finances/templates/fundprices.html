@@ -16,18 +16,12 @@
         data.addColumn('number', 'Price');
         data.addRows([
             {% for row in prices %}
-            [new Date({{ row.date.year }}, {{ row.date.month }}, {{row.date.day}}), {{ row.price }}],
+            [new Date({{ row.date.year }}, {{ row.date.month-1 }}, {{row.date.day}}), {{ row.price }}],
             {% endfor %}
         ]);
 
         // Set chart options
-        var options = {
-            'chart': {
-                'title':'How Much Pizza I Ate Last Night', 
-            },
-            'width':900, 
-            'height':500,
-        };
+        var options = { 'width':900, 'height':500 };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.charts.Line(document.getElementById('linechart_div'));
