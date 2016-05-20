@@ -4,13 +4,16 @@ from finances import db, app
 from finances.models.transaction import Transaction, monthly
 from finances.models.trans_file import TransFile
 from finances.models.category import Category, allChildren, categoriesSelectBox
+
+from finances.models.budget import Budget
+
 from finances.forms import TransactionForm, TransactionsForm, DateRangeForm, SplitTransactionForm
 
 from finances.models import investments 
 
 import datetime
 import collections
-from monthdelta import monthdelta
+from monthdelta import MonthDelta
 from urllib import unquote
 from sqlalchemy import desc
 
@@ -33,7 +36,7 @@ def categories():
 @app.route('/tritransactions/<category_id>/<month>', methods=['GET', 'POST']) 
 def tritransactions(category_id, month): 
     yyyy, mm = map(int, month.split('-'))
-    date = datetime.date(yyyy, mm, 1) - monthdelta(1)
+    date = datetime.date(yyyy, mm, 1) - MonthDelta(1)
 
     cat_ids = [category_id] + \
         [c.id for c in allChildren(db.session.query(Category).filter(Category.id==category_id).first())]
@@ -43,11 +46,11 @@ def tritransactions(category_id, month):
         tables.append( db.session.query(Transaction).join(Category)\
                 .filter(Category.id.in_(cat_ids),
                     Transaction.bdate>=date, 
-                    Transaction.bdate<date + monthdelta(1),
+                    Transaction.bdate<date + MonthDelta(1),
                 ).order_by(Transaction.bdate).all()
         )
 
-        date += monthdelta(1)
+        date += MonthDelta(1)
 
     return render_template('transactions.html', form=None, transactions=tables)
 
@@ -199,7 +202,7 @@ def year_returns(fund):
     return render_template('year_returns.html', prices=results, keys=years)
 
 @app.route('/budget', methods=['GET', 'POST']) 
-def budget(): #category_id=None): 
+def _budget(): #category_id=None): 
     form = DateRangeForm()
 
     if form.validate_on_submit():
@@ -241,3 +244,17 @@ def history(fund):
 @app.route('/example')
 def example():
     return render_template('example.html')
+
+@app.route('/hist_budget')
+def hist_budget():
+
+    keys, table, graph = foo.budget()
+
+    return render_template('hist_budget.html', keys=keys, table=table, graph=graph)
+
+@app.route('/')
+def _foo():
+    b = Budget('blah', 2015)
+    return render_template('foo.html', tables=[
+        b.income_t(), b.pretax_t(), b.taxes_t(), b.giving_t(), b.deductions_t()
+    ])

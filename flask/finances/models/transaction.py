@@ -94,7 +94,9 @@ def bofa(tdate, amt, trans_file):
                 AMTS[int(k)] = map(float, [x for x in v.split(',') if x])
 
     c = db.session.query(Category).filter_by(name="bofa chk").first()
-    db.session.add( Transaction(tdate, "xfer to USAA", c, -25, trans_file) )
+    if tdate < datetime.date(2016, 3, 1):
+        db.session.add( Transaction(tdate, "xfer to USAA", c, -25, trans_file) )
+
     vals = AMTS[int(amt)]
     yearly = True if amt > 10000.0 else False
     for i in range(len(vals)):
@@ -106,13 +108,13 @@ def bofa(tdate, amt, trans_file):
 
 def monthly(from_date, to_date):
     from_date = from_date.replace(day=1)
-    to_date = to_date.replace(day=1) + monthdelta.monthdelta(1)
+    to_date = to_date.replace(day=1) + monthdelta.MonthDelta(1)
 
     months = []
     tmpdate = datetime.date(from_date.year, from_date.month, from_date.day)
     while tmpdate < to_date:
         months.append(datetime.date(tmpdate.year, tmpdate.month, 1))
-        tmpdate += monthdelta.monthdelta(1)
+        tmpdate += monthdelta.MonthDelta(1)
 
     cats = db.session.query(Category).all()
     catids = dict([(c.id, c.name) for c in cats])

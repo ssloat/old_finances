@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 
-#from finances.models import transaction, category, trans_file, mort_schedule, investments, stock
-from finances.models import transaction, category, trans_file, mort_schedule, investments, stock
+from finances.models import (
+    transaction, category, trans_file, mort_schedule, investments, stock, tax_rates
+)
 from finances import views

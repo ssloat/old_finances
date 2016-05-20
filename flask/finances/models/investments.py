@@ -1,7 +1,6 @@
 from finances import db
 
 from finances.models.stock import Stock, StockPrice
-import monthdelta
 import datetime
 
 class InvTransaction(db.Model):

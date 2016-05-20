@@ -34,7 +34,7 @@ def _ccTransCsv(line, year, month):
     line = line.strip().replace("\"", "")
     dt, idn, des, loc, amt = line.split(',')
 
-    if dt == 'Posted Date' or float(amt) >= 0:
+    if dt == 'Posted Date' or re.search('PAYMENT - THANK', des):
         return None, None, None
 
     m, d, y = map(int, dt.split('/'))

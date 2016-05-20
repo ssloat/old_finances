@@ -1,7 +1,6 @@
 from finances import db
 
 import datetime
-#from monthdelta import MonthDelta
 import monthdelta
 
 class MortgageSchedule(db.Model):
@@ -40,5 +39,5 @@ def create_mort_schedule():
     d = datetime.date(2012, 1, 1)
     for s in schs:
         db.session.add( MortgageSchedule(d, s) )
-        d = d + monthdelta.monthdelta(1)
+        d = d + monthdelta.MonthDelta(1)
     

@@ -21,7 +21,8 @@ FUNDS_MAP = {
 }
 
 if __name__ == '__main__':
-    with open('../files/401k_2015_contrib.txt') as f:
+
+    with open('../files/401k_2016_contrib.txt') as f:
         for line in f.read().splitlines()[1:]:
             date, fund, contrib, _, match, shares, cost = line.split('\t')
             fund = string.rstrip(fund)
@@ -35,9 +36,13 @@ if __name__ == '__main__':
 
 
 
-            print ",".join([date, FUNDS_MAP[fund], 'Personal Contrib', str(contrib), '%.4f' % (perc*shares)])
-            print ",".join([date, FUNDS_MAP[fund], 'BofA Match', str(match), '%.4f' % (shares-perc*shares)])
+            if contrib > 0.0:
+                print ",".join([date, FUNDS_MAP[fund], 'Personal Contrib', str(contrib), '%.4f' % (perc*shares)])
 
+            if match > 0.0:
+                print ",".join([date, FUNDS_MAP[fund], 'BofA Match', str(match), '%.4f' % (shares-perc*shares)])
+
+    '''
     with open('../files/401k_2015_fee.txt') as f:
         for line in f.read().splitlines()[1:]:
             date, fund, cost, shares, _ = line.split('\t')
@@ -58,3 +63,4 @@ if __name__ == '__main__':
 
             print ",".join([date, FUNDS_MAP[fund], 'Dividends', str(cost), str(shares)])
 
+    '''

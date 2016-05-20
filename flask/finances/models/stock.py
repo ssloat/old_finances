@@ -2,6 +2,7 @@ from finances import db
 
 import datetime
 import urllib
+import re
 
 class Stock(db.Model):
     __tablename__ = 'stocks'
@@ -51,12 +52,16 @@ class StockPrice(db.Model):
 
 URL = 'http://ichart.yahoo.com/table.csv'
 def load_prices(start, end):
+    print start, end
     stocks = [
-            'PG', 'AAPL', 'BAC', 'AET', 'HD',
-            'TWCGX', 'VGTSX', 'VFINX',
-            'VGSIX', 'VIPSX', 'FMKIX', 'FNMIX', 'BMBSX', 'VWAHX', 'PPUDX', 'PRDSX', 'VEIPX', 'VEXAX',
-            'VIIIX', 'VEMPX', 'VIPIX', 'PTTRX', 
-            'VOO',
+#            'PG', 'AAPL', 'BAC', 'AET', 'HD',
+#            'TWCGX', 'VGTSX', 'VFINX',
+#            'VGSIX', 'VIPSX', 'FMKIX', 'FNMIX', 'BMBSX', 'VWAHX', 'PPUDX', 'PRDSX', 'VEIPX', 'VEXAX',
+#            'VIIIX', 'VEMPX', 'VIPIX', 'PTTRX', 
+#            'VOO',
+#        'AMZN', 
+        #'VTENX', 'VTXVX', 'VTWNX', 'VTTVX', 'VTHRX', 'VTTHX', 'VFORX', 'VTIVX', 'VFIFX', 'VFFVX', 'VTTSX',
+        'VIPSX', 'VBILX', 'VSIGX', 'VFITX', 'VBLTX', 'VLGSX', 'VUSTX', 'VFISX', 'VTAPX',
     ]
     # MFS, Stable capital, Int Crdt
 
@@ -69,16 +74,22 @@ def load_prices(start, end):
         for p in db.session.query(StockPrice).\
                 filter(StockPrice.stock==s, StockPrice.date >= start, StockPrice.date <= end):
 
+#            print "Delete: %s" % p
             db.session.delete(p)
 
         #args = '?s=%s&a=5&b=10&c=%d&d=11&e=31&f=%d' % (stock, yr, yr)
         args = [
             's=%s' % (stock),
             'a=%d' % (start.month-1), 'b=%d' % (start.day), 'c=%d' % (start.year),
-            'd=%d' % (end.month-1), 'd=%d' % (end.day), 'f=%d' % (end.year),
+            'd=%d' % (end.month-1), 'e=%d' % (end.day), 'f=%d' % (end.year),
         ]
 
-        for line in urllib.urlopen('%s?%s' % (URL, '&'.join(args))):
+        lines = urllib.urlopen('%s?%s' % (URL, '&'.join(args))).readlines()
+        if [x for x in lines if re.search('404 Not Found', x)]:
+            print "Not found: %s: %s - %s" % (stock, start, end)
+            continue
+
+        for line in lines:
             if line[:4] == 'Date': 
                 continue
 
@@ -86,6 +97,6 @@ def load_prices(start, end):
             date = datetime.date(*map(int, data[0].split('-')))
     
             sp = StockPrice(date, s, *map(float, data[1:]))
-            print "Add: %s" % sp
+#            print "Add: %s" % sp
             db.session.add(sp)
 

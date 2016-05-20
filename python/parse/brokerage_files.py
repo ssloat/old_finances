@@ -31,7 +31,7 @@ if __name__ == '__main__':
                 #db.session.add( InvTransaction(date, 'Pension', FUNDS_MAP[fund], float(shares), float(cost), float(cost) / float(shares), action) )
                 print ",".join([date, 'Pension', FUNDS_MAP[fund], shares, cost, str(float(cost) / float(shares)), action]) 
 
-    for year in range(2006, 2016):
+    for year in range(2006, 2017):
         with open('../files/401k_%s.csv' % year) as f:
             for line in f.read().splitlines():
                 date, fund, action, cost, shares = line.split(',')
@@ -39,7 +39,7 @@ if __name__ == '__main__':
                 #db.session.add( InvTransaction(date, '401k', FUNDS_MAP[fund], float(shares), float(cost), float(cost) / float(shares), action) )
                 print ",".join([date, '401k', FUNDS_MAP[fund], shares, cost, str(float(cost) / float(shares)), action]) 
 
-    files = ['roth.csv'] + ['brokerage_%s.csv' % yr for yr in range(2012, 2016)]
+    files = ['roth.csv'] + ['brokerage_%s.csv' % yr for yr in range(2012, 2017)]
     for fn in files:
         dividends = {}
         reinv = set()

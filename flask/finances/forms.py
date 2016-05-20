@@ -2,7 +2,7 @@ from flask.ext.wtf import Form
 from wtforms import StringField, BooleanField, DateField, SelectField, DecimalField
 from wtforms.validators import DataRequired
 import datetime
-from monthdelta import monthdelta
+from monthdelta import MonthDelta
 
 from finances.models.category import Category, categoriesSelectBox
 from finances import db
@@ -12,7 +12,7 @@ class LoginForm(Form):
     remember_me = BooleanField('remember_me', default=False)
 
 class TransactionsForm(Form):
-    startdate = DateField('startdate', format='%Y-%m-%d', default=datetime.date.today() - monthdelta(2))
+    startdate = DateField('startdate', format='%Y-%m-%d', default=datetime.date.today() - MonthDelta(2))
     enddate   = DateField('enddate', format='%Y-%m-%d', default=datetime.date.today())
     category  = SelectField('category', coerce=int)
 
@@ -38,5 +38,5 @@ class SplitTransactionForm(Form):
     yearly_2   = BooleanField('yearly_2')
 
 class DateRangeForm(Form):
-    startdate = DateField('startdate', format='%Y-%m-%d', default=datetime.date.today() - monthdelta(12))
+    startdate = DateField('startdate', format='%Y-%m-%d', default=datetime.date.today() - MonthDelta(12))
     enddate   = DateField('enddate', format='%Y-%m-%d', default=datetime.date.today())

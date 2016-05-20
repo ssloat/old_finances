@@ -251,16 +251,20 @@ def create_category_res():
     db.session.add( CategoryRE("STARS", stars, r"^BILL PAY CHECK \d+$") )
     db.session.add( CategoryRE("STARS", stars, r"^Bill Pay Check \d+$") )
     db.session.add( CategoryRE("STARS", stars, r"^Bill Pay Check \d+: COLLEGE CHURCH") )
+    db.session.add( CategoryRE("STARS", stars, r"^College Church") )
     db.session.add( CategoryRE("Compassion Intl", comp_intl, r"COMPASSION INT'L") )
     db.session.add( CategoryRE("GFA", gfa, r"Gospel for Asia") )
     db.session.add( CategoryRE("GFA", gfa, r"GOSPEL FOR ASIA") )
     db.session.add( CategoryRE("Rez", rez, r"Resurrection") )
     db.session.add( CategoryRE("Keane", keane, r"TEACHBEYOND") )
+    db.session.add( CategoryRE("Keane", keane, r"TeachBeyond") )
     db.session.add( CategoryRE("Keith", keith, r"^Bill Pay Check \d+: GREENHOUSE") )
     db.session.add( CategoryRE("Keith", keith, r"^Bill Pay Check \d+: Greenhouse") )
+    db.session.add( CategoryRE("Keith", keith, r"^Greenhouse") )
     db.session.add( CategoryRE("Stanley", stanley, r"GREATEREUROPEMIS") )
 
     db.session.add( CategoryRE("Jewel", fin, r"JEWEL ") )
+    db.session.add( CategoryRE("Marianos", fin, r"MARIANOS ") )
     db.session.add( CategoryRE("Trader Joes", fin, 'TRADER JOE') )
     db.session.add( CategoryRE("Binnys", fin, 'BINNYS BEVERAGE') )
     db.session.add( CategoryRE("Binnys", fin, 'Binny\'s') )
@@ -417,6 +421,7 @@ def create_category_res():
     db.session.add( CategoryRE("Netflix", monthly, 'NETFLIX') )
     db.session.add( CategoryRE("Hand & Stone", monthly, 'HAND & STONE MASSAGE') )
     db.session.add( CategoryRE("Hand & Stone", monthly, 'HAND AND STONE MASSAGE') )
+    db.session.add( CategoryRE("Python Anywhere", monthly, 'PYTHONANYWH') )
 
     #db.session.add( CategoryRE("Car Insurance", monthly, 'USAA P&C' ) )
 

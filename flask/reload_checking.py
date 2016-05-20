@@ -10,7 +10,7 @@ if __name__ == '__main__':
     start = datetime.date(*(map(int, sys.argv[1].split('-'))))
     end = datetime.date(*(map(int, sys.argv[2].split('-'))))
 
-    trans_file = db.session.query(TransFile).filter_by(name='bofa_checking_2015.txt').first()
+    trans_file = db.session.query(TransFile).filter_by(name='bofa_checking_2016.txt').first()
     print start, end, trans_file
     if trans_file:
         print trans_file
@@ -27,10 +27,10 @@ if __name__ == '__main__':
     else:
         "Didn't find file"
 
-        import sys
-        sys.exit()
+#        import sys
+#        sys.exit()
 
-    finances.models.files.bofaCheckingTxt('../files/bofa_checking_2015.txt', 0, 0, start, end)
+    finances.models.files.bofaCheckingTxt('../files/bofa_checking_2016.txt', 0, 0, start, end)
 
     db.session.commit()
 
